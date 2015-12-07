@@ -6,7 +6,7 @@
 <RelativeLayout
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"></RelativeLayout>
+    android:layout_height="match_parent"/>
 
 <RelativeLayout
     android:id="@+id/drawer_pane"
@@ -23,26 +23,23 @@
         android:background="@color/material_blue_gery_800">
         <ImageView
             android:id="@+id/icon"
+            android:contentDescription="profile picture"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:background="@mipmap/profile"/>
-        <LinearLayout
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:text="Don Joan"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="18dp"
             android:layout_toRightOf="@+id/icon"
-            android:layout_marginLeft="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Don Joan"
-                android:textColor="#fff"
-                android:textStyle="bold"
-                android:textSize="18dp"
-                />
-        </LinearLayout>
+            android:layout_toEndOf="@+id/icon"
+            />
 
     </RelativeLayout>
     <ListView
@@ -51,6 +48,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/profile_box"
         android:choiceMode="singleChoice"
-        android:background="#ffffff"></ListView>
+        android:background="#ffffff"/>
 </RelativeLayout>
 </android.support.v4.widget.DrawerLayout >
