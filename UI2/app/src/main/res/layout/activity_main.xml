@@ -20,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="center_vertical"
-        android:background="@color/material_blue_gery_800">
+        android:background="@drawable/nav_header">
+
         <ImageView
             android:id="@+id/icon"
             android:contentDescription="profile picture"
@@ -39,6 +40,7 @@
             android:textSize="18dp"
             android:layout_toRightOf="@+id/icon"
             android:layout_toEndOf="@+id/icon"
+            android:layout_alignBottom="@+id/icon"
             />
 
     </RelativeLayout>
@@ -48,6 +50,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/profile_box"
         android:choiceMode="singleChoice"
-        android:background="#ffffff"/>
+        android:divider="@android:color/transparent"
+        android:dividerHeight="20dp"
+        android:background="@drawable/btn_white_glossy"/>
 </RelativeLayout>
 </android.support.v4.widget.DrawerLayout >
