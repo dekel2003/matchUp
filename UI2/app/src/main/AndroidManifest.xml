@@ -2,12 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.peek.matchup.ui2" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="ZrCnAe33kupfzOuJ7sncBXMOPYFXWJpDqIqWW2nb" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="VLpNsGsoKEKvjQSWu0cdLn9NmAz889FfLZ6CfPFy" />
         <activity android:name=".MainActivity"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

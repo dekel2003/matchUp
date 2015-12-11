@@ -20,6 +20,8 @@ import com.com.fragments.About;
 import com.com.fragments.Home;
 import com.com.fragments.Setting;
 import com.models.NavIteam;
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,25 @@ public class MainActivity extends ActionBarActivity {
             }
         };
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+
+        // [Optional] Power your app with Local Datastore. For more info, go to
+        // https://parse.com/docs/android/guide#local-datastore
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this);
+
+
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
+
+        ParseObject gameScore = new ParseObject("GameScore");
+        gameScore.put("score", 1337);
+        gameScore.put("playerName", "Sean Plott");
+        gameScore.put("cheatMode", false);
+        gameScore.saveInBackground();
+
 
     }
 

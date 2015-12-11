@@ -7,5 +7,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Fragment2"
+        android:background="@drawable/btn_army_glossy"
         android:id="@+id/textView" />
 </LinearLayout>
