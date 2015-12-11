@@ -21,7 +21,11 @@ class Examples {
         gameScore.saveInBackground();
 
 //        And this is how we pull back the data from the server:
+//        SELECT FROM GameScore:
         ParseQuery<ParseObject> query = ParseQuery.getQuery("GameScore");
+
+//        WHERE playername = "Sean Plott".
+//        there are more methods under query, for querying the database.
         query.whereEqualTo("playerName", "Sean Plott");
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> scoreList, ParseException e) {
