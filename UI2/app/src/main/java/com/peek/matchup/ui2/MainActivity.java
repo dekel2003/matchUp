@@ -1,6 +1,7 @@
 package com.peek.matchup.ui2;
 
 import android.app.Activity;
+import android.graphics.drawable.PictureDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -8,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +22,11 @@ import com.com.fragments.About;
 import com.com.fragments.Home;
 import com.com.fragments.Setting;
 import com.models.NavIteam;
+import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,19 +108,6 @@ public class MainActivity extends ActionBarActivity {
 
         Parse.initialize(this);
 
-
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
-
-        ParseObject gameScore = new ParseObject("GameScore");
-        gameScore.put("score", 1337);
-        gameScore.put("playerName", "Sean Plott");
-        gameScore.put("cheatMode", false);
-        gameScore.saveInBackground();
-
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
