@@ -1,10 +1,15 @@
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.peek.matchup.ui2.R;
 
+import java.net.URL;
 import java.util.List;
 
 class Examples {
@@ -37,4 +42,22 @@ class Examples {
             }
         });
     }
+//
+//    private void loadBitmap() {
+//        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+//                R.drawable.icon_resource);
+//    }
+//
+//    private void loadBitmapFromURL() {
+//        String name = c.getString(str_url);
+//        URL url_value = new URL(name);
+//        ImageView profile = (ImageView) v.findViewById(R.id.vdo_icon);
+//        if (profile != null) {
+//            Bitmap mIcon1 =
+//                    BitmapFactory.decodeStream(url_value.openConnection().getInputStream());
+//            profile.setImageBitmap(mIcon1);
+//        }
+//    }
+
+
 }

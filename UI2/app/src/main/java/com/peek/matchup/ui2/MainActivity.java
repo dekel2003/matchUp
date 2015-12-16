@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         navIteamList.add(new NavIteam("Tools", "change tools ", R.mipmap.tools));
 
         NavAdapter navAdapter = new NavAdapter(getApplicationContext(), R.layout.item_nav_list, navIteamList);
-       listView.setAdapter(navAdapter);
+        listView.setAdapter(navAdapter);
 
         fragmentList = new ArrayList<Fragment>();
         fragmentList.add(new Home());
@@ -108,6 +108,7 @@ public class MainActivity extends ActionBarActivity {
 
         Parse.initialize(this);
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

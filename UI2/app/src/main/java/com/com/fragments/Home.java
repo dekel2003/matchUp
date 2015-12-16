@@ -44,7 +44,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         v=inflater.inflate(R.layout.tabs_view_pager_layout,container,false);
 
         i++;
-        initVeiwPager();
+        initViewPager();
         initTabHost(savedInstanceState);
 
 
@@ -78,7 +78,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 
     }
 
-    private void initVeiwPager() {
+    private void initViewPager() {
         viewPager=(ViewPager)v.findViewById(R.id.view_pager);
         List<Fragment> listFragments=new ArrayList<Fragment>();
         listFragments.add(new Fragment1());

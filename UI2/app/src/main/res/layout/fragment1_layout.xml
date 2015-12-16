@@ -9,4 +9,10 @@
         android:text="Fragment1"
         android:id="@+id/textView"
         android:background="@drawable/btn_white_glossy"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/example_image_view"
+        android:layout_gravity="center_vertical" />
 </LinearLayout>
