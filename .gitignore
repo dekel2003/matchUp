@@ -27,3 +27,5 @@ proguard/
 *.log
 UI2/.idea/misc.xml
 UI2/.idea/misc.xml
+UI2/.idea/gradle.xml
+UI2/.idea/misc.xml
