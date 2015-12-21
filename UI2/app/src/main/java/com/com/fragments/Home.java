@@ -1,4 +1,5 @@
 package com.com.fragments;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -33,7 +34,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     MyFragmentPagerAdaper myFragmentPagerAdaper;
     int i=0;
     View v;
-
+    Fragment2 fragment2;
 
 
 
@@ -44,7 +45,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         v=inflater.inflate(R.layout.tabs_view_pager_layout,container,false);
 
         i++;
-        initViewPager();
+        initVeiwPager();
         initTabHost(savedInstanceState);
 
 
@@ -78,11 +79,13 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 
     }
 
-    private void initViewPager() {
+    private void initVeiwPager() {
+
         viewPager=(ViewPager)v.findViewById(R.id.view_pager);
+        fragment2=new Fragment2();
         List<Fragment> listFragments=new ArrayList<Fragment>();
         listFragments.add(new Fragment1());
-        listFragments.add(new Fragment2());
+        listFragments.add(fragment2);
         listFragments.add(new Fragment3());
         listFragments.add(new Fragment4());
         listFragments.add(new Fragment5());
@@ -121,5 +124,11 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fragment2.onActivityResult(requestCode,resultCode,data);
     }
 }

@@ -1,14 +1,14 @@
 package com.peek.matchup.ui2;
 
-import android.app.Activity;
-import android.graphics.drawable.PictureDrawable;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,17 +16,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.com.adapters.NavAdapter;
 import com.com.fragments.About;
 import com.com.fragments.Home;
+import com.com.fragments.Out;
 import com.com.fragments.Setting;
+import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
-import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +41,23 @@ public class MainActivity extends ActionBarActivity {
 
     ActionBarDrawerToggle actionBarDrawerToggle;
 
+    Home home;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String name=getIntent().getStringExtra("name");
+        String id=getIntent().getStringExtra("id");
+        ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
+        profilePictureView.setProfileId(id);
+        TextView nametxt=(TextView) findViewById(R.id.nametxt);
+        nametxt.setText(name);
+        TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        String mPhoneNumber = tMgr.getLine1Number();
+        Log.d("dddddddddddddddddddd---", mPhoneNumber);//one time whene you register save phone name id
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
@@ -56,14 +67,17 @@ public class MainActivity extends ActionBarActivity {
         navIteamList.add(new NavIteam("Home", "home page", R.mipmap.home));
         navIteamList.add(new NavIteam("Setting", "change setting", R.mipmap.setting));
         navIteamList.add(new NavIteam("Tools", "change tools ", R.mipmap.tools));
+        navIteamList.add(new NavIteam("Logout", "leave your acoount ", R.mipmap.logout));
 
         NavAdapter navAdapter = new NavAdapter(getApplicationContext(), R.layout.item_nav_list, navIteamList);
         listView.setAdapter(navAdapter);
 
+        home=new Home();
         fragmentList = new ArrayList<Fragment>();
         fragmentList.add(new Home());
         fragmentList.add(new Setting());
         fragmentList.add(new About());
+        fragmentList.add(new Out());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_content, fragmentList.get(0)).commit();
@@ -102,12 +116,6 @@ public class MainActivity extends ActionBarActivity {
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
 
-        // [Optional] Power your app with Local Datastore. For more info, go to
-        // https://parse.com/docs/android/guide#local-datastore
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this);
-
     }
 
     @Override
@@ -128,5 +136,21 @@ public class MainActivity extends ActionBarActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        home.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
     }
 }

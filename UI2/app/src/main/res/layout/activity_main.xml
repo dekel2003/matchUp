@@ -22,25 +22,33 @@
         android:gravity="center_vertical"
         android:background="@drawable/nav_header">
 
-        <ImageView
-            android:id="@+id/icon"
-            android:contentDescription="profile picture"
+        <!--<ImageView-->
+            <!--android:id="@+id/icon"-->
+            <!--android:contentDescription="profile picture"-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="70dp"-->
+            <!--android:layout_marginLeft="8dp"-->
+            <!--android:layout_marginStart="8dp"-->
+            <!--android:background="@mipmap/profile"/>-->
+
+        <com.facebook.login.widget.ProfilePictureView
+            android:id="@+id/profile_pic"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@mipmap/profile"/>
+            />
 
         <TextView
+            android:id="@+id/nametxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Don Joan"
             android:textColor="#fff"
             android:textStyle="bold"
             android:textSize="18dp"
-            android:layout_toRightOf="@+id/icon"
-            android:layout_toEndOf="@+id/icon"
-            android:layout_alignBottom="@+id/icon"
+            android:layout_toRightOf="@+id/profile_pic"
+            android:layout_toEndOf="@+id/profile_pic"
+            android:layout_alignBottom="@+id/profile_pic"
             />
 
     </RelativeLayout>
