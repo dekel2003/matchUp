@@ -1,6 +1,7 @@
 package com.inner.fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -90,7 +91,7 @@ public class Fragment2 extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
 
-        if (resultCode ==getActivity().RESULT_OK )
+        if (resultCode == Activity.RESULT_OK)
         {
             String name = data.getExtras().getString("name", "");
             String id = data.getExtras().getString("id", "");

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -57,7 +58,10 @@ public class MainActivity extends ActionBarActivity {
         nametxt.setText(name);
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
-        Log.d("dddddddddddddddddddd---", mPhoneNumber);//one time whene you register save phone name id
+
+        String location = tMgr.getCellLocation().toString();
+        Log.d("MainActivity", mPhoneNumber);//one time whene you register save phone name id
+        Log.d("MainActivity", location);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
@@ -144,13 +148,13 @@ public class MainActivity extends ActionBarActivity {
         home.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//    }
+//    @Override
+//    protected void onPause() {
+//        // TODO Auto-generated method stub
+//        super.onPause();
+//    }
 }

@@ -1,46 +1,24 @@
 package com.peek.matchup.ui2;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.login.widget.ProfilePictureView;
 import com.parse.ParseObject;
-import com.peek.matchup.ui2.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
 
 
 public class LoginFacebookFragment extends Fragment {
@@ -84,7 +62,7 @@ public class LoginFacebookFragment extends Fragment {
 
         AccessToken accessToken=AccessToken.getCurrentAccessToken();
         if(accessToken!=null)
-            GetinfoAndMOveOn(accessToken);
+            getInfoAndMOveOn(accessToken);
         else
             loginButton.setVisibility(getView().VISIBLE);
 
@@ -92,7 +70,7 @@ public class LoginFacebookFragment extends Fragment {
     }
 
 
-    private void GetinfoAndMOveOn(final AccessToken accessToken)
+    private void getInfoAndMOveOn(final AccessToken accessToken)
     {
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
@@ -114,8 +92,6 @@ public class LoginFacebookFragment extends Fragment {
                         i.putExtra("id", id);
                         startActivity(i);
                         getActivity().finish();
-
-
                     }
                 });
         Bundle parameters = new Bundle();
@@ -132,7 +108,7 @@ public class LoginFacebookFragment extends Fragment {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
-        loginButton.setVisibility(view.INVISIBLE);
+        loginButton.setVisibility(View.INVISIBLE);
         loginButton.setReadPermissions("user_friends");
         loginButton.setFragment(this);
 
@@ -140,16 +116,20 @@ public class LoginFacebookFragment extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
 
-
-
             @Override
             public void onSuccess(LoginResult loginResult) {
-                loginButton.setVisibility(view.INVISIBLE);
+                loginButton.setVisibility(View.INVISIBLE);
 
 
+                ParseObject user = new ParseObject("Users");
+                user.put("FacebookID", loginResult.getAccessToken().getUserId());
+                user.put("Name", "Sean Plott");
+                user.put("Email", false);
+
+                user.saveInBackground();
 
 
-               //GetinfoAndMOveOn(AccessToken.getCurrentAccessToken());
+               //getInfoAndMOveOn(AccessToken.getCurrentAccessToken());
 
          /*   if(Profile.getCurrentProfile() == null) {
                 mProfileTracker = new ProfileTracker() {
