@@ -16,6 +16,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.parse.Parse;
 import com.parse.ParseObject;
 
 import org.json.JSONObject;
@@ -120,7 +121,8 @@ public class LoginFacebookFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
 
-
+                Parse.enableLocalDatastore(getActivity().getApplicationContext());
+                Parse.initialize(getActivity().getApplicationContext());
                 ParseObject user = new ParseObject("Users");
                 user.put("FacebookID", loginResult.getAccessToken().getUserId());
                 user.put("Name", "Sean Plott");
