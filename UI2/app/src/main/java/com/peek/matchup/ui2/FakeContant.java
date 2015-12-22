@@ -7,10 +7,10 @@ import android.widget.TabHost;
 /**
  * Created by User on 06/12/2015.
  */
-public class FaceContant implements TabHost.TabContentFactory{
+public class FakeContant implements TabHost.TabContentFactory{
     Context context;
 
-    public FaceContant(Context mcontext)
+    public FakeContant(Context mcontext)
     {
         context=mcontext;
 

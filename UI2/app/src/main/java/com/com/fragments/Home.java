@@ -18,7 +18,7 @@ import com.inner.fragment.Fragment3;
 import com.inner.fragment.Fragment4;
 import com.inner.fragment.Fragment5;
 import com.inner.fragment.Fragment6;
-import com.peek.matchup.ui2.FaceContant;
+import com.peek.matchup.ui2.FakeContant;
 import com.peek.matchup.ui2.R;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
             tabSpec=tabHost.newTabSpec(tabNames[i]);
             tabSpec.setIndicator("", ContextCompat.getDrawable(getActivity(),icons[i]));
             //tabSpec.setIndicator(tabNames[i],getResources().getDrawable(R.mipmap.home));
-            tabSpec.setContent(new FaceContant(getActivity()));
+            tabSpec.setContent(new FakeContant(getActivity()));
             tabHost.addTab(tabSpec);
 
 

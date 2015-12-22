@@ -3,6 +3,7 @@ package com.peek.matchup.ui2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +17,15 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 
 public class LoginFacebookFragment extends Fragment {
@@ -94,6 +100,7 @@ public class LoginFacebookFragment extends Fragment {
                         i.putExtra("name",name);
                         i.putExtra("id", id);
                         startActivity(i);
+                        getActivity().finish();
                     }
                 });
         Bundle parameters = new Bundle();
@@ -121,11 +128,29 @@ public class LoginFacebookFragment extends Fragment {
 
                 // Parse.enableLocalDatastore(getActivity().getApplicationContext());
                 // Parse.initialize(getActivity().getApplicationContext());
+                //
+                //
 
-                ParseObject user = new ParseObject("Users");
-                user.put("FacebookID", id);
-                user.put("Name", name);
-                user.saveInBackground();
+
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Users");
+                query.whereEqualTo("FacebookID", id);
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    public void done(List<ParseObject> res, ParseException e) {
+                        if (e == null) {
+                            if (res.size() == 0) {
+                                ParseObject user = new ParseObject("Users");
+                                user.put("FacebookID", id);
+                                user.put("Name", name);
+                                user.saveInBackground();
+                            }
+                        } else {
+                            Log.d("login", "Error: " + e.getMessage());
+                        }
+                    }
+                });
+
+
+
 
 
                //getInfoAndMOveOn(AccessToken.getCurrentAccessToken());
