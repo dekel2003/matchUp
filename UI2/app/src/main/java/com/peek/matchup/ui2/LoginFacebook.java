@@ -54,11 +54,15 @@ public class LoginFacebook extends FragmentActivity {
                     Intent i=new Intent(LoginFacebook.this,MainActivity.class);
                     i.putExtra("name",name);
                     i.putExtra("id", id);
+                    i.putExtra("birthday", object.optString("birthday"));
+                    i.putExtra("gender", object.optString("gender"));
+
+
                     startActivity(i);
                 }
             });
             Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name");
+            parameters.putString("fields", "id,name,birthday,gender");
             request.setParameters(parameters);
             request.executeAsync();
         }

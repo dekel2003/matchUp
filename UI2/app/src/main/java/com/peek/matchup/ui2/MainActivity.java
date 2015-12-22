@@ -49,15 +49,23 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         String name=getIntent().getStringExtra("name");
         String id=getIntent().getStringExtra("id");
+        String birthday=getIntent().getStringExtra("birthday");
+        ((TextView) findViewById(R.id.birthday)).setText(birthday);
+        Log.d("MainActivity: bday",birthday);
+        String gender=getIntent().getStringExtra("gender");
+        Log.d("MainActivity: gender",gender);
+        ((TextView) findViewById(R.id.gender)).setText(gender);
+
         ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
         profilePictureView.setProfileId(id);
         TextView nametxt=(TextView) findViewById(R.id.nametxt);
         nametxt.setText(name);
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
-        Log.d("dddddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
+        Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
