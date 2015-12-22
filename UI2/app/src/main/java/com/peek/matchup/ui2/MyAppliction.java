@@ -7,6 +7,10 @@ import android.content.pm.Signature;
 import android.util.Base64;
 import android.util.Log;
 
+import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -19,6 +23,13 @@ public class MyAppliction extends Application {
     public void onCreate() {
         super.onCreate();
         printHashkey();
+
+
+        Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "ZrCnAe33kupfzOuJ7sncBXMOPYFXWJpDqIqWW2nb", "VLpNsGsoKEKvjQSWu0cdLn9NmAz889FfLZ6CfPFy");
+        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParseFacebookUtils.initialize(this);
+        Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
     }
 
     public void printHashkey()

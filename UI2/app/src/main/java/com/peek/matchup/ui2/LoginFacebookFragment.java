@@ -46,8 +46,8 @@ public class LoginFacebookFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-        callbackManager=CallbackManager.Factory.create();
+//        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+//        callbackManager=CallbackManager.Factory.create();
 
     }
 
@@ -74,8 +74,6 @@ public class LoginFacebookFragment extends Fragment {
             getInfoAndMOveOn(accessToken);
         else
             loginButton.setVisibility(View.VISIBLE);
-
-
     }
 
 
