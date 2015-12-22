@@ -25,6 +25,8 @@ import org.json.JSONObject;
 public class LoginFacebookFragment extends Fragment {
 
     private CallbackManager callbackManager;
+    String name;
+    String id;
 
 
 
@@ -80,8 +82,8 @@ public class LoginFacebookFragment extends Fragment {
                     public void onCompleted(
                             JSONObject object,
                             GraphResponse response) {
-                        String name=object.optString("name");
-                        String id=object.optString("id");
+                        name=object.optString("name");
+                        id=object.optString("id");
                         String link=object.optString("link");
                         //Log.d("name",name);
                         //Log.d("id",id);
@@ -121,10 +123,8 @@ public class LoginFacebookFragment extends Fragment {
                 // Parse.initialize(getActivity().getApplicationContext());
 
                 ParseObject user = new ParseObject("Users");
-                user.put("FacebookID", loginResult.getAccessToken().getUserId());
-                user.put("Name", "Sean Plott");
-                user.put("Email", false);
-
+                user.put("FacebookID", id);
+                user.put("Name", name);
                 user.saveInBackground();
 
 

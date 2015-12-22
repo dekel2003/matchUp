@@ -101,6 +101,8 @@ public class MyFacbookFriendsList extends ActionBarActivity {
 
     void initList()
     {
+
+        onResume();
         accessToken = AccessToken.getCurrentAccessToken();
         if(accessToken!=null) {
             GraphRequestBatch batch = new GraphRequestBatch(
