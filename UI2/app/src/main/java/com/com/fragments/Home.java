@@ -70,8 +70,8 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         }
 
         for(int i=0; i<tabNames.length; i++) {
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height *= 1.2;
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width= 130;
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height *= 1.7;
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width= 180;
         }
 
         tabHost.setOnTabChangedListener(this);

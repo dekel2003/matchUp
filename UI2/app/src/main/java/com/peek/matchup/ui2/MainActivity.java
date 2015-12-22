@@ -1,14 +1,15 @@
 package com.peek.matchup.ui2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.telephony.PhoneStateListener;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -24,10 +25,9 @@ import com.com.fragments.About;
 import com.com.fragments.Home;
 import com.com.fragments.Out;
 import com.com.fragments.Setting;
+import com.facebook.AccessToken;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
-import com.parse.Parse;
-import com.parse.ParseInstallation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +40,15 @@ public class MainActivity extends ActionBarActivity {
 
     List<NavIteam> navIteamList;
     List<Fragment> fragmentList;
+    Home home;
 
     ActionBarDrawerToggle actionBarDrawerToggle;
-
-    Home home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         String name=getIntent().getStringExtra("name");
         String id=getIntent().getStringExtra("id");
         ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
@@ -59,10 +57,7 @@ public class MainActivity extends ActionBarActivity {
         nametxt.setText(name);
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
-
-       // String location = tMgr.getCellLocation().toString();
-        Log.d("MainActivity", mPhoneNumber);//one time whene you register save phone name id
-       // Log.d("MainActivity", location);
+        Log.d("dddddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
@@ -76,10 +71,10 @@ public class MainActivity extends ActionBarActivity {
 
         NavAdapter navAdapter = new NavAdapter(getApplicationContext(), R.layout.item_nav_list, navIteamList);
         listView.setAdapter(navAdapter);
-
         home=new Home();
+
         fragmentList = new ArrayList<Fragment>();
-        fragmentList.add(new Home());
+        fragmentList.add(home);
         fragmentList.add(new Setting());
         fragmentList.add(new About());
         fragmentList.add(new Out());
@@ -120,8 +115,6 @@ public class MainActivity extends ActionBarActivity {
         };
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-
-
     }
 
     @Override
@@ -147,16 +140,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        home.onActivityResult(requestCode, resultCode, data);
+        home.onActivityResult(requestCode,resultCode,data);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//    }
-//    @Override
-//    protected void onPause() {
-//        // TODO Auto-generated method stub
-//        super.onPause();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+    }
 }

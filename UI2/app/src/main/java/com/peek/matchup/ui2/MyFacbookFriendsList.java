@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.com.adapters.NavAdapterFacebook;
@@ -24,12 +27,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MyFacbookFriendsList extends ActionBarActivity {
     ListView listView;
     AccessToken accessToken;
     List<NavItemFacebook> ListFacebook;
+    List<NavItemFacebook> ListFacebookcopy;
     String caller;
+    EditText searchtxt;
+    NavAdapterFacebook navAdapterFacebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +56,51 @@ public class MyFacbookFriendsList extends ActionBarActivity {
                 finish();
             }
         });
+        initList();
+
+        searchtxt=(EditText)findViewById(R.id.txtsearch);
+        searchtxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
 
 
 
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = searchtxt.getText().toString().toLowerCase(Locale.getDefault());
+                List<NavItemFacebook> tmp= new ArrayList<NavItemFacebook>();;
+                tmp.addAll(ListFacebookcopy);
+
+                    ListFacebook.clear();
+                    if (text.length() == 0 ) {
+                        ListFacebook.addAll(tmp);
+                    } else {
+                        for (NavItemFacebook wp : tmp) {
+                            if (wp.getTitle().toLowerCase(Locale.getDefault())
+                                    .contains(text)) {
+                                ListFacebook.add(wp);
+                            }
+                        }
+                    }
+                navAdapterFacebook.notifyDataSetChanged();
+                }
+
+        });
+
+
+    }
+
+
+    void initList()
+    {
         accessToken = AccessToken.getCurrentAccessToken();
         if(accessToken!=null) {
             GraphRequestBatch batch = new GraphRequestBatch(
@@ -77,6 +126,7 @@ public class MyFacbookFriendsList extends ActionBarActivity {
                                     try {
                                         JSONArray values = object.getJSONArray("data");
                                         ListFacebook = new ArrayList<NavItemFacebook>();
+                                        ListFacebookcopy = new ArrayList<NavItemFacebook>();
                                         for (int i = 0; i < values.length(); i++) {
 
                                             JSONObject friend = values.getJSONObject(i);
@@ -84,10 +134,12 @@ public class MyFacbookFriendsList extends ActionBarActivity {
                                             String id = friend.getString("id");
                                             //Log.d("na:", name);
                                             ListFacebook.add(new NavItemFacebook(name, id));
+                                            ListFacebookcopy.add(new NavItemFacebook(name, id));
+
 
                                         }
 
-                                        NavAdapterFacebook navAdapterFacebook = new NavAdapterFacebook(getApplicationContext(), R.layout.facebook_friend, ListFacebook);
+                                         navAdapterFacebook = new NavAdapterFacebook(getApplicationContext(), R.layout.facebook_friend, ListFacebook);
                                         listView.setAdapter(navAdapterFacebook);
                                     } catch (JSONException e1) {
                                         e1.printStackTrace();
