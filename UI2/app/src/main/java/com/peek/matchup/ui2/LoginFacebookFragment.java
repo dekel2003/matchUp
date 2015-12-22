@@ -65,7 +65,7 @@ public class LoginFacebookFragment extends Fragment {
         if(accessToken!=null)
             getInfoAndMOveOn(accessToken);
         else
-            loginButton.setVisibility(getView().VISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
 
 
     }
@@ -92,18 +92,14 @@ public class LoginFacebookFragment extends Fragment {
                         i.putExtra("name",name);
                         i.putExtra("id", id);
                         startActivity(i);
-                        getActivity().finish();
                     }
                 });
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,name,link");
         request.setParameters(parameters);
         request.executeAsync();
-
-
-
-
     }
+
      LoginButton loginButton;
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -121,8 +117,9 @@ public class LoginFacebookFragment extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 loginButton.setVisibility(View.INVISIBLE);
 
-                Parse.enableLocalDatastore(getActivity().getApplicationContext());
-                Parse.initialize(getActivity().getApplicationContext());
+                // Parse.enableLocalDatastore(getActivity().getApplicationContext());
+                // Parse.initialize(getActivity().getApplicationContext());
+
                 ParseObject user = new ParseObject("Users");
                 user.put("FacebookID", loginResult.getAccessToken().getUserId());
                 user.put("Name", "Sean Plott");

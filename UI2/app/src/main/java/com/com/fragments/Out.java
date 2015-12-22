@@ -1,6 +1,5 @@
 package com.com.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.login.LoginManager;
-import com.peek.matchup.ui2.LoginFacebook;
-import com.peek.matchup.ui2.MainActivity;
 import com.peek.matchup.ui2.R;
 
 /**
@@ -29,8 +26,12 @@ public class Out extends Fragment {
     public void onResume() {
         super.onResume();
         LoginManager.getInstance().logOut();
+        getActivity().finish();
+        /*
         Intent i=new Intent(getActivity(),LoginFacebook.class);
+        ParseUser.logOut();
         startActivity(i);
         getActivity().finish();
+        */
     }
 }

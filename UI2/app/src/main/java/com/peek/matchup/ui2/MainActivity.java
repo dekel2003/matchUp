@@ -27,6 +27,7 @@ import com.com.fragments.Setting;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +60,9 @@ public class MainActivity extends ActionBarActivity {
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
 
-        String location = tMgr.getCellLocation().toString();
+       // String location = tMgr.getCellLocation().toString();
         Log.d("MainActivity", mPhoneNumber);//one time whene you register save phone name id
-        Log.d("MainActivity", location);
+       // Log.d("MainActivity", location);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
@@ -118,6 +119,7 @@ public class MainActivity extends ActionBarActivity {
             }
         };
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
 
 
     }
