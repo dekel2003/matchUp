@@ -12,7 +12,7 @@ import com.parse.ParseUser;
 /**
  * Created by Dekel on 12/23/2015.
  */
-public class sendNotifications {
+public class SendNotifications {
     public static void newMatch(String Alice_id, String Bob_id){
         ParseQuery<ParseInstallation> parseInstallationParseQuery = ParseInstallation.getQuery();
         parseInstallationParseQuery.whereEqualTo("FacebookID",Alice_id);

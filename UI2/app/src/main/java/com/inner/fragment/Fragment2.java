@@ -8,34 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.com.adapters.NavAdapter;
-import com.com.adapters.NavAdapterFacebook;
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphRequestBatch;
-import com.facebook.GraphResponse;
 import com.facebook.login.widget.ProfilePictureView;
-import com.models.NavIteam;
-import com.models.NavItemFacebook;
-import com.peek.matchup.ui2.MainActivity;
-import com.peek.matchup.ui2.MyFacbookFriendsList;
+import com.helperClasses.SendNotifications;
 import com.peek.matchup.ui2.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -52,6 +34,10 @@ public class Fragment2 extends Fragment {
     public static final int DATEPICKER_FRAGMENT1=20;
     public static final int DATEPICKER_FRAGMENT2=21;
     private FragmentActivity myContext;
+
+    private String id1 = "";
+    private String id2 = "";
+    private Button btn;
 
 
     @Nullable
@@ -94,6 +80,14 @@ public class Fragment2 extends Fragment {
         textView1=(TextView)v.findViewById(R.id.textView2);
         textView2=(TextView)v.findViewById(R.id.textView3);
 
+        btn = (Button) v.findViewById(R.id.btnMatchNow);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendNotifications.newMatch(id1,id2);
+                Toast.makeText(getActivity().getApplicationContext(),"Match has been proposed succesfully",Toast.LENGTH_LONG).show();
+            }
+        });
 
         return v;
     }
@@ -117,13 +111,15 @@ public class Fragment2 extends Fragment {
             if (requestCode == DATEPICKER_FRAGMENT1) {
                 profilePictureView1.setProfileId(id);
                 textView1.setText(name);
+                id1 = id;
             }
             else {
                 profilePictureView2.setProfileId(id);
                 textView2.setText(name);
+                id2 = id;
             }
-
-
+            if (id1.length()!=0 && id2.length()!=0)
+                btn.setVisibility(View.VISIBLE);
         }
 
 

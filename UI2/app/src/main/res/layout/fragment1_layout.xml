@@ -6,6 +6,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Fragment1"
+        android:text="The knowledge Matching will be available at the second submision, and is deprecated for this submission."
         android:id="@+id/textView" />
 </LinearLayout>
