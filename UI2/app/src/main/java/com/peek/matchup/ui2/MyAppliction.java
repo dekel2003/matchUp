@@ -11,6 +11,8 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -24,6 +26,7 @@ public class MyAppliction extends Application {
         super.onCreate();
         printHashkey();
 
+        JodaTimeAndroid.init(this);
 
 //        Parse.enableLocalDatastore(this);
         Parse.initialize(this, "ZrCnAe33kupfzOuJ7sncBXMOPYFXWJpDqIqWW2nb", "VLpNsGsoKEKvjQSWu0cdLn9NmAz889FfLZ6CfPFy");

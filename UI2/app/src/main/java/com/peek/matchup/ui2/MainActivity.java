@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +31,19 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -54,8 +66,12 @@ public class MainActivity extends ActionBarActivity {
         String name=getIntent().getStringExtra("name");
         String id=getIntent().getStringExtra("id");
         String birthday=getIntent().getStringExtra("birthday");
-        ((TextView) findViewById(R.id.birthday)).setText(birthday);
-        Log.d("MainActivity: bday",birthday);
+
+        Years age = Years.yearsBetween(LocalDate.parse(birthday, DateTimeFormat.forPattern("MM/dd/yyyy")), LocalDate.now());
+
+        ((TextView) findViewById(R.id.birthday)).setText(Integer.toString(age.getYears()));
+        Log.d("MainActivity: bday",age.toString());
+
         String gender=getIntent().getStringExtra("gender");
         Log.d("MainActivity: gender",gender);
         ((TextView) findViewById(R.id.gender)).setText(gender);
