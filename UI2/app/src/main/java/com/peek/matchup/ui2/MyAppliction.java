@@ -22,7 +22,7 @@ public class MyAppliction extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        printHashkey();
+        printHashkey();
 
 
 //        Parse.enableLocalDatastore(this);
