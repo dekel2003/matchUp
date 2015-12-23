@@ -71,7 +71,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 
         for(int i=0; i<tabNames.length; i++) {
             tabHost.getTabWidget().getChildAt(i).getLayoutParams().height *= 1.7;
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width= 180;
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width= 150;
         }
 
         tabHost.setOnTabChangedListener(this);
@@ -88,8 +88,8 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         listFragments.add(fragment2);
         listFragments.add(new Fragment3());
         listFragments.add(new Fragment4());
-        listFragments.add(new Fragment5());
-        listFragments.add(new Fragment6());
+        //listFragments.add(new Fragment5());
+        //listFragments.add(new Fragment6());
         myFragmentPagerAdaper=new MyFragmentPagerAdaper(getChildFragmentManager(),listFragments);
         viewPager.setAdapter(myFragmentPagerAdaper);
         viewPager.setOnPageChangeListener(this);
