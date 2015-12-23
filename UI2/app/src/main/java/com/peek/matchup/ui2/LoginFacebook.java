@@ -9,6 +9,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ui.ParseLoginBuilder;
 
@@ -24,11 +25,17 @@ public class LoginFacebook extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (AccessToken.getCurrentAccessToken() != null){
-            proceedToMainActivity();
-        }else {
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        if (token == null) {
             ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
             startActivityForResult(builder.build(), RCODE);
+        }else if(token.isExpired()){
+            AccessToken.refreshCurrentAccessTokenAsync();
+            ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
+            startActivityForResult(builder.build(), RCODE);
+        }else {
+            AccessToken.refreshCurrentAccessTokenAsync();
+            proceedToMainActivity();
         }
 
         if(savedInstanceState==null)
@@ -55,10 +62,11 @@ public class LoginFacebook extends FragmentActivity {
 
     private void proceedToMainActivity() {
         Log.d("Main Activity: ", "000000000000");
-        AccessToken accessToken=AccessToken.getCurrentAccessToken();
+        final AccessToken accessToken=AccessToken.getCurrentAccessToken();
         GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
+
                 Log.d("Main Activity: ",response.getRawResponse());
                 String name=object.optString("name");
                 String id=object.optString("id");

@@ -5,11 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/match_your_friends"/>
-
         <LinearLayout
             android:id="@+id/picsLayout"
             android:layout_width="match_parent"
@@ -48,6 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_weight="0.5"
                 />
 
             <Button
@@ -64,6 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_weight="0.5"
+                android:gravity="center"
 
                 />
 

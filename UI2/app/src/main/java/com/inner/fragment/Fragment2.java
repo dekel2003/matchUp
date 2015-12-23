@@ -15,9 +15,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.widget.ProfilePictureView;
 import com.helperClasses.SendNotifications;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.peek.matchup.ui2.MainActivity;
 import com.peek.matchup.ui2.R;
+
+import org.json.JSONObject;
 
 
 /**
@@ -37,6 +45,8 @@ public class Fragment2 extends Fragment {
 
     private String id1 = "";
     private String id2 = "";
+    private String name1 = "";
+    private String name2 = "";
     private Button btn;
 
 
@@ -80,12 +90,48 @@ public class Fragment2 extends Fragment {
         textView1=(TextView)v.findViewById(R.id.textView2);
         textView2=(TextView)v.findViewById(R.id.textView3);
 
+
         btn = (Button) v.findViewById(R.id.btnMatchNow);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SendNotifications.newMatch(id1,id2);
-                Toast.makeText(getActivity().getApplicationContext(),"Match has been proposed succesfully",Toast.LENGTH_LONG).show();
+
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                String name = object.optString("name");
+                                String id = object.optString("id");
+                                String link = object.optString("link");
+
+                                SendNotifications.newMatch(id1, id2);
+                                Toast.makeText(getActivity().getApplicationContext(),"Match has been proposed succesfully",Toast.LENGTH_LONG).show();
+                                ParseObject addMatch = new ParseObject("Matches");
+                                addMatch.put("id1", id1);
+                                addMatch.put("id2", id2);
+
+                                addMatch.put("name1", name1);
+                                addMatch.put("name2", name2);
+
+
+                                addMatch.put("matcher", id);
+                                addMatch.put("matcherName", name);
+
+                                addMatch.saveInBackground();
+
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,link");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+
+
             }
         });
 
@@ -112,11 +158,13 @@ public class Fragment2 extends Fragment {
                 profilePictureView1.setProfileId(id);
                 textView1.setText(name);
                 id1 = id;
+                name1=name;
             }
             else {
                 profilePictureView2.setProfileId(id);
                 textView2.setText(name);
                 id2 = id;
+                name2=name;
             }
             if (id1.length()!=0 && id2.length()!=0)
                 btn.setVisibility(View.VISIBLE);
