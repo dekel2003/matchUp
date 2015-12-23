@@ -1,12 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:id="@+id/settingsLinearLayout"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="30dp"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:dividerPadding="30dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="setting"
+        android:text="Dating Prefferences"
         android:textSize="20dp"
         android:textColor="#000"
         android:textStyle="bold"
         />
+    <TextView
+        android:id="@+id/textAgeRange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Age Range:"
+        android:textSize="20dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/minAge"
+            android:text="18"
+            android:textSize="20dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maxAge"
+            android:text="82"
+            android:textSize="20dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
 </LinearLayout>
