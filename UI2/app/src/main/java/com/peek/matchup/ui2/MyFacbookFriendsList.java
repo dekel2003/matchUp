@@ -17,8 +17,10 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.models.NavItemFacebook;
 
 import org.json.JSONArray;
@@ -56,7 +58,7 @@ public class MyFacbookFriendsList extends ActionBarActivity {
                 finish();
             }
         });
-        initList();
+       // initList();
 
         searchtxt=(EditText)findViewById(R.id.txtsearch);
         searchtxt.addTextChangedListener(new TextWatcher() {
@@ -102,7 +104,41 @@ public class MyFacbookFriendsList extends ActionBarActivity {
     void initList()
     {
 
-        onResume();
+        GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+
+                        try {
+                            JSONArray values = response.getJSONObject().getJSONArray("data");
+                            ListFacebook = new ArrayList<NavItemFacebook>();
+                            ListFacebookcopy = new ArrayList<NavItemFacebook>();
+                            for (int i = 0; i < values.length(); i++) {
+
+                                JSONObject friend = values.getJSONObject(i);
+                                String name = friend.getString("name");
+                                String id = friend.getString("id");
+                                //Log.d("na:", name);
+                                ListFacebook.add(new NavItemFacebook(name, id));
+                                ListFacebookcopy.add(new NavItemFacebook(name, id));
+
+
+                            }
+
+                            navAdapterFacebook = new NavAdapterFacebook(getApplicationContext(), R.layout.facebook_friend, ListFacebook);
+                            listView.setAdapter(navAdapterFacebook);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).executeAsync();
+    }
+
+       /* onResume();
         accessToken = AccessToken.getCurrentAccessToken();
         if(accessToken!=null) {
             GraphRequestBatch batch = new GraphRequestBatch(
@@ -160,6 +196,7 @@ public class MyFacbookFriendsList extends ActionBarActivity {
             batch.executeAsync();
         }
     }
+    */
 
 
 
@@ -167,13 +204,7 @@ public class MyFacbookFriendsList extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        accessToken = AccessToken.getCurrentAccessToken();
+        initList();
 
     }
 

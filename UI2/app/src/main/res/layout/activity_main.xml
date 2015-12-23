@@ -13,20 +13,24 @@
     android:layout_width="280dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
+
     >
 
     <RelativeLayout
         android:id="@+id/profile_box"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         android:gravity="center_vertical"
-        android:background="@drawable/nav_header">
+        android:background="@drawable/nav_header"
+        >
+
 
         <com.facebook.login.widget.ProfilePictureView
             android:id="@+id/profile_pic"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginLeft="8dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="7dp"
             />
 
         <TextView
@@ -36,11 +40,12 @@
             android:text="Don Joan"
             android:textColor="#fff"
             android:textStyle="bold"
-            android:textSize="18dp"
+            android:textSize="25dp"
+            android:layout_alignTop="@+id/profile_pic"
             android:layout_toRightOf="@+id/profile_pic"
             android:layout_toEndOf="@+id/profile_pic"
-            android:layout_alignBottom="@+id/profile_pic"
-            />
+            android:layout_marginLeft="21dp"
+            android:layout_marginStart="21dp" />
         <TextView
             android:id="@+id/birthday"
             android:layout_width="wrap_content"
@@ -48,10 +53,12 @@
             android:text="1/1/1970"
             android:textColor="#fff"
             android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_below="@+id/nametxt"
+            android:textSize="12dp"
+            android:visibility="invisible"
 
-            />
+            android:layout_below="@+id/gender"
+            android:layout_alignLeft="@+id/gender"
+            android:layout_alignStart="@+id/gender" />
         <TextView
             android:id="@+id/gender"
             android:layout_width="wrap_content"
@@ -59,11 +66,11 @@
             android:text="M/F"
             android:textColor="#fff"
             android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_toRightOf="@+id/birthday"
-            android:layout_toEndOf="@+id/birthday"
+            android:textSize="15dp"
 
-            />
+            android:layout_below="@+id/nametxt"
+            android:layout_alignLeft="@+id/nametxt"
+            android:layout_alignStart="@+id/nametxt" />
 
     </RelativeLayout>
     <ListView
