@@ -26,6 +26,7 @@ import com.com.fragments.Home;
 import com.com.fragments.Out;
 import com.com.fragments.Setting;
 import com.facebook.AccessToken;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
 
@@ -154,10 +155,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
     }
+
     @Override
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
+
+        // Logs 'app deactivate' App Event.
+        AppEventsLogger.deactivateApp(this);
     }
 }
