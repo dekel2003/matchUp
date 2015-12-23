@@ -9,6 +9,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.parse.ParseInstallation;
 import com.parse.ui.ParseLoginBuilder;
 
 import org.json.JSONObject;
@@ -66,6 +67,11 @@ public class LoginFacebook extends FragmentActivity {
                 i.putExtra("id", id);
                 i.putExtra("birthday", object.optString("birthday"));
                 i.putExtra("gender", object.optString("gender"));
+
+
+                ParseInstallation pi = ParseInstallation.getCurrentInstallation();
+                pi.put("FacebookID",id);
+                pi.saveInBackground();
 
 
                 startActivity(i);
