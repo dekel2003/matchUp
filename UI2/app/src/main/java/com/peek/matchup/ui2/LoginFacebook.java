@@ -24,14 +24,14 @@ public class LoginFacebook extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
+        startActivityForResult(builder.build(), RCODE);
 
         if(savedInstanceState==null)
         {
 //            fragment=new LoginFacebookFragment();
 //            getSupportFragmentManager().beginTransaction().add(android.R.id.content,fragment).commit();
-            ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
-            startActivityForResult(builder.build(), RCODE);
+
         }
         else
         {
@@ -65,6 +65,8 @@ public class LoginFacebook extends FragmentActivity {
             parameters.putString("fields", "id,name,birthday,gender");
             request.setParameters(parameters);
             request.executeAsync();
+        }else{
+            finish();
         }
     }
 }
