@@ -6,10 +6,20 @@ package com.models;
 public class NavItemFacebook {
     private String title;
     private String id;
+    private String metcher;//only for gridvuew
+    private String metcherid;//only for gridvuew
+
 
     public NavItemFacebook(String title, String id) {
         this.title = title;
         this.id = id;
+    }
+
+    public NavItemFacebook(String title, String id,String metcher, String metcherid) {
+        this.title = title;
+        this.id = id;
+        this.metcher=metcher;
+        this.metcherid=metcherid;
     }
 
     public String getTitle() {
@@ -26,5 +36,21 @@ public class NavItemFacebook {
 
     public void setid(String id) {
         this.id = id;
+    }
+
+    public String getMetcher() {
+        return metcher;
+    }
+
+    public void setMetcher(String metcher) {
+        this.metcher = metcher;
+    }
+
+    public String getMetcherid() {
+        return metcherid;
+    }
+
+    public void setMetcherid(String metcherid) {
+        this.metcherid = metcherid;
     }
 }

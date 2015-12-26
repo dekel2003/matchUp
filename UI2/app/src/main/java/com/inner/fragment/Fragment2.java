@@ -20,9 +20,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.widget.ProfilePictureView;
 import com.helperClasses.SendNotifications;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
-import com.peek.matchup.ui2.MainActivity;
 import com.peek.matchup.ui2.R;
 
 import org.json.JSONObject;
@@ -160,7 +158,7 @@ public class Fragment2 extends Fragment {
                 id1 = id;
                 name1=name;
             }
-            else {
+            else if (requestCode == DATEPICKER_FRAGMENT2)  {
                 profilePictureView2.setProfileId(id);
                 textView2.setText(name);
                 id2 = id;

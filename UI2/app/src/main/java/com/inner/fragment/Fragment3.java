@@ -1,13 +1,18 @@
 package com.inner.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,8 +39,10 @@ import java.util.List;
  */
 public class Fragment3 extends Fragment {
 
-    ListView listView;
+    GridView gridView;
     List<NavItemFacebook> ListFacebook;
+    private FragmentActivity myContext;
+
 
     NavAdapterFacebook navAdapterFacebook;
     @Nullable
@@ -43,8 +50,26 @@ public class Fragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment3_layout, container, false);
+       // listView=(ListView) v.findViewById(R.id.listViewMatches);
+        final Fragment f=this;
+        final FragmentManager fragManager = myContext.getSupportFragmentManager();
+        gridView=(GridView) v.findViewById(R.id.gridView);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Fragment5 dialog  = new Fragment5();
+                dialog.setTargetFragment(f, position);
+                Bundle args = new Bundle();
+                args.putString("namemacher", ListFacebook.get(position).getMetcher());
+                args.putString("idmacher", ListFacebook.get(position).getMetcherid());
+                dialog.setArguments(args);
+                // Show DialogFragment
+                dialog .show(fragManager, "Dialog Fragment");
+            }
+        });
 
-        listView=(ListView) v.findViewById(R.id.listViewMatches);
+
+
             GraphRequest request = GraphRequest.newMeRequest(
                     AccessToken.getCurrentAccessToken(),
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -66,7 +91,7 @@ public class Fragment3 extends Fragment {
                                         //allMatches.addAll(matches);
                                         ListFacebook = new ArrayList<NavItemFacebook>();
                                         for (int i = 0; i < matches.size(); i++) {
-                                            ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString()));
+                                            ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(),matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString()));
                                         }
 
                                     } else {
@@ -80,10 +105,11 @@ public class Fragment3 extends Fragment {
 
                                                 //allMatches.addAll(matches);
                                                 for (int i = 0; i < matches2.size(); i++) {
-                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).get("name1").toString(), matches2.get(i).get("id1").toString()));
+                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).get("name1").toString(), matches2.get(i).get("id1").toString(),matches2.get(i).get("matcherName").toString(), matches2.get(i).get("matcher").toString()));
                                                 }
-                                                navAdapterFacebook = new NavAdapterFacebook(getActivity().getApplicationContext(), R.layout.facebook_friend, ListFacebook);
-                                                listView.setAdapter(navAdapterFacebook);
+                                                navAdapterFacebook = new NavAdapterFacebook(getActivity().getApplicationContext(), R.layout.matches_view, ListFacebook);
+                                               // listView.setAdapter(navAdapterFacebook);
+                                                gridView.setAdapter(navAdapterFacebook);
 
 
 
@@ -110,5 +136,10 @@ public class Fragment3 extends Fragment {
 
 
         return v;
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        myContext=(FragmentActivity) activity;
+        super.onAttach(activity);
     }
 }
