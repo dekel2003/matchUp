@@ -32,6 +32,7 @@ dependencies {
     compile 'com.parse:parseui-widget-android:0.0.1'
 
     compile 'net.danlew:android.joda:2.9.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // Uncomment if using Twitter Login (optional Maven dependency)
     // compile 'com.parse:parsetwitterutils-android:1.10.3'

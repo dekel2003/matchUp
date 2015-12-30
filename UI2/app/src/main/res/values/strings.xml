@@ -8,6 +8,7 @@
     <string-array name="my_facebook_permissions">
         <item>public_profile</item>
         <item>user_friends</item>
+        <item>user_photos</item>
         <item>user_birthday</item>
     </string-array>
 </resources>
