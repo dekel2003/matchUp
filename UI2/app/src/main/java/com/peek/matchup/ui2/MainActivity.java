@@ -74,7 +74,9 @@ public class MainActivity extends ActionBarActivity {
         nametxt.setText(name);
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
-        Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
+
+        if (mPhoneNumber != null)
+            Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
