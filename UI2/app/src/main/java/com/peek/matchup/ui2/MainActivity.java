@@ -1,17 +1,14 @@
 package com.peek.matchup.ui2;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +23,6 @@ import com.com.fragments.About;
 import com.com.fragments.Home;
 import com.com.fragments.Out;
 import com.com.fragments.Setting;
-import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
@@ -34,16 +30,9 @@ import com.models.NavIteam;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -81,8 +70,12 @@ public class MainActivity extends ActionBarActivity {
         TextView nametxt=(TextView) findViewById(R.id.nametxt);
         nametxt.setText(name);
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+
         String mPhoneNumber = tMgr.getLine1Number();
-        Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
+
+        if (mPhoneNumber != null) {
+            Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
+        }
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
