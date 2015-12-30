@@ -1,6 +1,5 @@
 package com.peek.matchup.ui2;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -8,10 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +19,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.com.adapters.NavAdapter;
-import com.com.fragments.About;
+import com.com.fragments.MyAlbums;
 import com.com.fragments.Home;
 import com.com.fragments.Out;
+import com.com.fragments.Profile;
 import com.com.fragments.Setting;
-import com.facebook.AccessToken;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
@@ -34,16 +31,10 @@ import com.models.NavIteam;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -54,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
     List<NavIteam> navIteamList;
     List<Fragment> fragmentList;
     Home home;
+    Profile profile;
 
     ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -89,19 +81,21 @@ public class MainActivity extends ActionBarActivity {
         listView = (ListView) findViewById(R.id.nav_list);
 
         navIteamList = new ArrayList<NavIteam>();
-        navIteamList.add(new NavIteam("Home", "home page", R.mipmap.home));
+
+        navIteamList.add(new NavIteam("Home", "home", R.mipmap.home));
+        navIteamList.add(new NavIteam("Profile", "my profile", R.mipmap.proicon));
         navIteamList.add(new NavIteam("Setting", "change setting", R.mipmap.setting));
-        navIteamList.add(new NavIteam("Tools", "change tools ", R.mipmap.tools));
         navIteamList.add(new NavIteam("Logout", "leave your acoount ", R.mipmap.logout));
 
         NavAdapter navAdapter = new NavAdapter(getApplicationContext(), R.layout.item_nav_list, navIteamList);
         listView.setAdapter(navAdapter);
         home=new Home();
+        profile=new Profile();
 
         fragmentList = new ArrayList<Fragment>();
         fragmentList.add(home);
+        fragmentList.add(profile);
         fragmentList.add(new Setting());
-        fragmentList.add(new About());
         fragmentList.add(new Out());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -166,6 +160,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         home.onActivityResult(requestCode,resultCode,data);
+
     }
 
     @Override
