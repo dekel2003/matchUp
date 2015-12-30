@@ -98,6 +98,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.chat.ChatActivity"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>

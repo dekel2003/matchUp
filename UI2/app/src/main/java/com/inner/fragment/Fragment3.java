@@ -11,16 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.com.adapters.NavAdapterFacebook;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.helperClasses.SendNotifications;
 import com.models.NavItemFacebook;
 import com.parse.FindCallback;
 import com.parse.ParseException;
