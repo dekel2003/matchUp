@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.peek.matchup.ui2.R;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,7 +55,7 @@ public class ChatAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         ChatMessage chatMessage = getItem(position);
         LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -68,8 +70,18 @@ public class ChatAdapter extends BaseAdapter {
         boolean myMsg = chatMessage.getIsme() ;//Just a dummy check to simulate whether it me or other sender
         setAlignment(holder, myMsg);
         holder.txtMessage.setText(chatMessage.getMessage());
-        holder.txtInfo.setText(chatMessage.getDate());
+        holder.txtInfo.setText(DateFormat.getDateTimeInstance().format(chatMessage.getDate()));
+        holder.txtInfo.setVisibility(View.GONE);
 
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.txtInfo.getVisibility() == View.VISIBLE)
+                    holder.txtInfo.setVisibility(View.GONE);
+                else
+                    holder.txtInfo.setVisibility(View.VISIBLE);
+            }
+        });
 
         return convertView;
     }
@@ -138,4 +150,5 @@ public class ChatAdapter extends BaseAdapter {
         public LinearLayout content;
         public LinearLayout contentWithBG;
     }
+
 }

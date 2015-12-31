@@ -85,7 +85,7 @@ public class ChatActivity extends ActionBarActivity {
         String id1 = getIntent().getStringExtra("id1");
         String id2 = getIntent().getStringExtra("id2");
 
-        SendNotifications.notifyByParseId(id);
+//          SendNotifications.notifyByParseId(id);
 
         meLabel.setText(getUserNameByParseID(id));
 
@@ -93,6 +93,7 @@ public class ChatActivity extends ActionBarActivity {
         companionLabel2.setText(getUserNameByParseID(id2));
 
         loadDummyHistory();
+        loadHistory(id);
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,16 +102,22 @@ public class ChatActivity extends ActionBarActivity {
                 if (TextUtils.isEmpty(messageText)) {
                     return;
                 }
-
+                ParseObject message = new ParseObject("ChatMessages");
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setId(id);
+                message.put("senderId",id);
+                int chatId = getIntent().getIntExtra("chatId", -1);
+                message.put("chatId", chatId);
                 chatMessage.setMessage(messageText);
-                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                message.put("content", messageText);
+                chatMessage.setDate(new Date());
+                message.put("date", chatMessage.getDate());
                 chatMessage.setMe(true);
 
                 messageET.setText("");
 
                 displayMessage(chatMessage);
+                message.saveInBackground();
             }
         });
 
@@ -142,8 +149,30 @@ public class ChatActivity extends ActionBarActivity {
     }
 
 
-    private void loadHistory(){
-
+    private void loadHistory(String id) {
+//        final String id = getIntent().getStringExtra("id");
+        int chatId = getIntent().getIntExtra("chatId", -1);
+        if (chatId == -1) {
+            Log.d("Chat: ", "Error - chat ID is invalid");
+        }
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ChatMessages");
+        query.whereEqualTo("chatId", chatId);
+        List<ParseObject> messages = null;
+        try {
+            messages = query.find();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for (ParseObject message : messages) {
+            ChatMessage msg = new ChatMessage();
+            msg.setId(message.getString("senderId"));
+            msg.setMe(true);
+            if (!msg.getId().equals(id))
+                msg.setMe(false);
+            msg.setDate(message.getDate("date"));
+            msg.setMessage(message.getString("content"));
+            displayMessage(msg);
+        }
     }
 
 
@@ -155,13 +184,13 @@ public class ChatActivity extends ActionBarActivity {
         msg.setId("1");
         msg.setMe(false);
         msg.setMessage("Hi");
-        msg.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        msg.setDate(new Date());
         chatHistory.add(msg);
         ChatMessage msg1 = new ChatMessage();
         msg1.setId("2");
         msg1.setMe(false);
         msg1.setMessage("How r u doing???");
-        msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        msg1.setDate(new Date());
         chatHistory.add(msg1);
 
         adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());

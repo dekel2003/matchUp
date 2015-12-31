@@ -1,5 +1,7 @@
 package com.chat;
 
+import java.util.Date;
+
 /**
  * Created by Technovibe on 17-04-2015.
  */
@@ -8,7 +10,7 @@ public class ChatMessage {
     private boolean isMe;
     private String message;
     private Long userId;
-    private String dateTime;
+    private Date dateTime;
 
     public String getId() {
         return id;
@@ -42,11 +44,11 @@ public class ChatMessage {
         this.userId = userId;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return dateTime;
     }
 
-    public void setDate(String dateTime) {
+    public void setDate(Date dateTime) {
         this.dateTime = dateTime;
     }
 }
