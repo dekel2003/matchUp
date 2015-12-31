@@ -53,12 +53,24 @@
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/friendLabel"
+            android:id="@+id/friendLabel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friend"
+            android:textSize="20dp"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/friendLabel1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="Friend"
             android:textSize="20dp" />
+
+
+
+
 
 
 

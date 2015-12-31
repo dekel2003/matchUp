@@ -8,8 +8,6 @@ import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ui.ParseLoginBuilder;
 
@@ -30,6 +28,8 @@ public class LoginFacebook extends FragmentActivity {
             ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
             startActivityForResult(builder.build(), RCODE);
         }else if(token.isExpired()){
+            if (!token.getDeclinedPermissions().isEmpty())
+                token.getPermissions();
             AccessToken.refreshCurrentAccessTokenAsync();
             ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
             startActivityForResult(builder.build(), RCODE);

@@ -2,10 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Available matches and Chat - will be available in second submission."
-        android:id="@+id/textView" />
+        android:background="@drawable/btn_lightblue_glossy"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dp"
+        android:text="Open Chat"
+        android:onClick="OpenChat"
+        android:id="@+id/dummy_chat"
+        />
 </LinearLayout>

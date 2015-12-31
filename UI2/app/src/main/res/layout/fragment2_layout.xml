@@ -62,7 +62,6 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_weight="0.5"
                 android:gravity="center"
-
                 />
 
         </LinearLayout>

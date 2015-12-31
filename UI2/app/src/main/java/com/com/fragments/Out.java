@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.login.LoginManager;
+import com.parse.Parse;
 import com.parse.ParseUser;
 import com.peek.matchup.ui2.LoginFacebook;
 import com.peek.matchup.ui2.R;
@@ -29,6 +30,7 @@ public class Out extends Fragment {
     public void onResume() {
         super.onResume();
         LoginManager.getInstance().logOut();
+        ParseUser.logOut();
         getActivity().finish();
         Intent i=new Intent(getActivity(),LoginFacebook.class);
         startActivity(i);

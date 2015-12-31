@@ -91,7 +91,7 @@ public class Fragment3 extends Fragment {
                                         }
 
                                     } else {
-                                        Log.d("score", "Error: " + e.getMessage());
+                                        Log.d("Matches Fragment(3):", "Error: " + e.getMessage());
                                     }
                                     ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Matches");
                                     query2.whereEqualTo("id2", id);
