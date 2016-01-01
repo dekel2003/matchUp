@@ -1,20 +1,40 @@
 package com.peek.matchup.ui2;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.chat.ChatActivity;
+import com.parse.ParseAnalytics;
 import com.parse.ParseBroadcastReceiver;
+import com.parse.ParsePushBroadcastReceiver;
 
-public class Receiver extends ParseBroadcastReceiver {
-    public Receiver() {
-    }
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class Receiver extends ParsePushBroadcastReceiver {
+
+    public Receiver(){super();}
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-        Log.i("TAG", "Push Received");
+    public void onPushReceive(Context context, Intent intent) {
+//        Toast.makeText(context, "Push received!!!!.", Toast.LENGTH_LONG).show();
+//        super.onReceive(context, intent);
+
+
+        try {
+            JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+            Log.d("Dekel", "JSONE object: " + json.toString());
+//            if (ChatActivity.active)
+
+        } catch (JSONException e) {
+            Log.d("Dekel", "JSONException: " + e.getMessage());
+            e.printStackTrace();
+        }
+        Log.i("Dekel", "Push Received");
+        Log.d("Dekel", "received " + intent.getAction());
     }
 }

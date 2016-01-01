@@ -14,6 +14,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseSession;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -104,5 +107,37 @@ public class SendNotifications {
         push.sendInBackground();
     }
 
+
+    public static void SendJSONByParseId(String ParseId, JSONObject jo) {
+        final ParseQuery<ParseSession> query = ParseSession.getQuery();
+
+        ParseQuery<ParseUser> user_query = ParseUser.getQuery();
+        user_query.whereEqualTo("objectId", ParseId);
+        ParseUser user = null;
+        try {
+            user = user_query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Collection<String> res = new ArrayList<>();
+        res.add("installationId");
+        query.selectKeys(res).whereEqualTo("user", user);
+
+        ParseQuery<ParseInstallation> qi = ParseInstallation.getQuery();
+        qi.whereMatchesKeyInQuery("installationId", "installationId", query);
+
+        ParsePush push = new ParsePush();
+////        push.setMessage("You got a new message");
+//        JSONObject jo2 = new JSONObject();
+//        try {
+//            jo2.put("DPHM",jo);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        push.setData(jo);
+        push.setQuery(qi);
+        push.sendInBackground();
+    }
 
 }

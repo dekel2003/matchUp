@@ -36,7 +36,7 @@ public class Fragment4 extends Fragment {
 //                args.putString("id2", "966642636741330");  // TODO: give me the second User-ID
                 // It's better to work in parse with the parse "Object-ID" rather than the Facebook ID.
                 args.putString("id", ParseUser.getCurrentUser().getObjectId());
-                args.putString("id1", "HOiQh7YWTY");  // TODO: give me the first User-Object_ID
+                args.putString("id1", "V90z1IH2WX");  // TODO: give me the first User-Object_ID
                 args.putString("id2", "Gfz5ybSgal");  // TODO: give me the second User-Object_ID
                 args.putInt("chatId",1234); // TODO: create unique chat-id for this specific conversation.
                 intent.putExtras(args);

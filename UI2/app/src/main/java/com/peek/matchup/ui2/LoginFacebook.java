@@ -8,6 +8,7 @@ import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ui.ParseLoginBuilder;
 
@@ -22,6 +23,8 @@ public class LoginFacebook extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
 
         AccessToken token = AccessToken.getCurrentAccessToken();
         if (token == null) {

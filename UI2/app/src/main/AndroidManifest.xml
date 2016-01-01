@@ -29,9 +29,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data android:name="com.parse.push.notification_icon" android:resource="@drawable/match_up_logo"/>
+
         <service android:name="com.parse.PushService" />
         <receiver
-            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:name=".Receiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />

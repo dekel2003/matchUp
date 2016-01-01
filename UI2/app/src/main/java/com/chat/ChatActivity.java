@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.com.fragments.Setting;
+import com.google.gson.Gson;
 import com.helperClasses.SendNotifications;
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -23,13 +24,31 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.peek.matchup.ui2.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.helperClasses.SendNotifications.SendJSONByParseId;
+
 
 public class ChatActivity extends ActionBarActivity {
+    public static boolean active = false;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
+    }
 
     private EditText messageET;
     private ListView messagesContainer;
@@ -82,8 +101,8 @@ public class ChatActivity extends ActionBarActivity {
         Log.d("Chat Activity: ", getIntent().getStringExtra("id2"));
 
         final String id = getIntent().getStringExtra("id");
-        String id1 = getIntent().getStringExtra("id1");
-        String id2 = getIntent().getStringExtra("id2");
+        final String id1 = getIntent().getStringExtra("id1");
+        final String id2 = getIntent().getStringExtra("id2");
 
 //          SendNotifications.notifyByParseId(id);
 
@@ -105,7 +124,7 @@ public class ChatActivity extends ActionBarActivity {
                 ParseObject message = new ParseObject("ChatMessages");
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setId(id);
-                message.put("senderId",id);
+                message.put("senderId", id);
                 int chatId = getIntent().getIntExtra("chatId", -1);
                 message.put("chatId", chatId);
                 chatMessage.setMessage(messageText);
@@ -116,8 +135,21 @@ public class ChatActivity extends ActionBarActivity {
 
                 messageET.setText("");
 
+                Gson gson = new Gson();
+                JSONObject request = null;
+                try {
+                    request = new JSONObject(gson.toJson(chatMessage));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                SendJSONByParseId(id1, request);
+                SendJSONByParseId(id2, request);
+
                 displayMessage(chatMessage);
                 message.saveInBackground();
+
+
             }
         });
 
