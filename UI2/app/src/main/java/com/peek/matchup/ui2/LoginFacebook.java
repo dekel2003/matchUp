@@ -9,7 +9,11 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.parse.ParseSession;
+import com.parse.ParseUser;
+import com.parse.ui.ParseLoginActivity;
 import com.parse.ui.ParseLoginBuilder;
 
 import org.json.JSONObject;
@@ -27,10 +31,17 @@ public class LoginFacebook extends FragmentActivity {
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
 
         AccessToken token = AccessToken.getCurrentAccessToken();
+
+
+
         if (token == null) {
+            ParseUser.logOut();
+            Log.d("Main Activity: ", "null token - log out.");
             ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
             startActivityForResult(builder.build(), RCODE);
-        }else if(token.isExpired()){
+        }else if(token.isExpired() || (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser()))){
+            Log.d("Main Activity: ", "unlinked account - log out.");
+            ParseUser.logOut();
             if (!token.getDeclinedPermissions().isEmpty())
                 token.getPermissions();
             AccessToken.refreshCurrentAccessTokenAsync();
@@ -69,8 +80,14 @@ public class LoginFacebook extends FragmentActivity {
         GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
-
-                Log.d("Main Activity: ",response.getRawResponse());
+                if (response.getError()!=null){
+                    Log.d("Main Activity: ",response.getError().getErrorMessage());
+                    AccessToken.refreshCurrentAccessTokenAsync();
+                    ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
+                    startActivityForResult(builder.build(), RCODE);
+                    return;
+                }
+                Log.d("Main Activity: ", "connected with Token: " + accessToken.getToken());
                 String name=object.optString("name");
                 String id=object.optString("id");
                 Intent i=new Intent(LoginFacebook.this,MainActivity.class);

@@ -126,7 +126,7 @@ public class Fragment3 extends Fragment {
 
 
                                             } else {
-                                                Log.d("score", "Error: " + e.getMessage());
+                                                Log.d("Fragment 3: ", "Error: " + e.getMessage());
                                             }
                                         }
                                     });
