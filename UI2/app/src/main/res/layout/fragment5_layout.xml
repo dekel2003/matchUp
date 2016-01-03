@@ -6,16 +6,39 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_weight="1"
+        android:layout_margin="10dp"
 
         />
     <TextView
         android:id="@+id/machername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ffffff"
+
         android:textSize="30dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/imageMatcher"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Recommendation:"
+        android:textStyle="bold"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/imageMatcher"
+        android:layout_alignLeft="@+id/imageMatcher"
+        android:layout_alignStart="@+id/imageMatcher" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/rec"
+        android:layout_below="@+id/textView4"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_alignStart="@+id/textView4"
+        android:layout_alignRight="@+id/machername"
+        android:layout_alignEnd="@+id/machername" />
 </RelativeLayout>

@@ -28,8 +28,11 @@ public class Fragment5 extends Fragment {
 
         View v=inflater.inflate(R.layout.fragment5_layout,container,false);
         Bundle bundle = this.getArguments();
-        String macherName =bundle.getString("namemacher","");
-        String idMacher = bundle.getString("idmacher","");
+        String macherName =bundle.getString("namemacher", "");
+        String idMacher = bundle.getString("idmacher", "");
+        String rec = bundle.getString("rec", "");
+        TextView recomntion=(TextView) v.findViewById(R.id.rec);
+        recomntion.setText(rec);
         profilePictureViewMacher=(ProfilePictureView)v.findViewById(R.id.imageMatcher);
         nameMacher=(TextView) v.findViewById(R.id.machername);
         profilePictureViewMacher.setProfileId(idMacher);

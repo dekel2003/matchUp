@@ -60,6 +60,7 @@ public class Fragment3 extends Fragment {
                 intent.putExtra("namemacher", ListFacebook.get(position).getMetcher().toString());
                 intent.putExtra("idmacher", ListFacebook.get(position).getMetcherid());
                 intent.putExtra("idmyMatch", ListFacebook.get(position).getId());
+                intent.putExtra("rec", ListFacebook.get(position).getRec());
                 startActivity(intent);
 
                // gridView.setVisibility(View.INVISIBLE);
@@ -97,7 +98,7 @@ public class Fragment3 extends Fragment {
                                         //allMatches.addAll(matches);
                                         ListFacebook = new ArrayList<NavItemFacebook>();
                                         for (int i = 0; i < matches.size(); i++) {
-                                            ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(),matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString()));
+                                            ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(),matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(),matches.get(i).get("rec2").toString()));
                                         }
 
                                     } else {
@@ -111,7 +112,7 @@ public class Fragment3 extends Fragment {
 
                                                 //allMatches.addAll(matches);
                                                 for (int i = 0; i < matches2.size(); i++) {
-                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).get("name1").toString(), matches2.get(i).get("id1").toString(),matches2.get(i).get("matcherName").toString(), matches2.get(i).get("matcher").toString()));
+                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).get("name1").toString(), matches2.get(i).get("id1").toString(),matches2.get(i).get("matcherName").toString(), matches2.get(i).get("matcher").toString(),matches2.get(i).get("rec1").toString()));
                                                 }
                                                 navAdapterFacebook = new NavAdapterFacebook(getActivity().getApplicationContext(), R.layout.matches_view, ListFacebook);
                                                // listView.setAdapter(navAdapterFacebook);

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ public class Fragment2 extends Fragment {
     ProfilePictureView profilePictureView2;
     TextView textView1;
     TextView textView2;
+    EditText editText1;
+    EditText editText2;
     private final int REQUEST_CODE1 = 20;
     private final int REQUEST_CODE2 = 21;
     public static final int DATEPICKER_FRAGMENT1=20;
@@ -55,6 +58,10 @@ public class Fragment2 extends Fragment {
         View v=inflater.inflate(R.layout.fragment2_layout,container,false);
         final Fragment f=this;
         final FragmentManager fragManager = myContext.getSupportFragmentManager();
+        editText1=(EditText) v.findViewById(R.id.editText1);
+        editText2=(EditText) v.findViewById(R.id.editText2);
+        editText1.setText("");
+        editText2.setText("");
         profilePictureView1=(ProfilePictureView)v.findViewById(R.id.image1);
         profilePictureView1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +121,9 @@ public class Fragment2 extends Fragment {
 
                                 addMatch.put("name1", name1);
                                 addMatch.put("name2", name2);
+
+                                addMatch.put("rec1", editText1.getText().toString());
+                                addMatch.put("rec2",  editText2.getText().toString());
 
 
                                 addMatch.put("matcher", id);

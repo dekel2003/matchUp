@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -126,6 +127,7 @@ public class Profile extends Fragment {
                                 Obj.put("aboutme", aboutme.getText().toString());
 
                                 Obj.saveInBackground();
+                                Toast.makeText(getActivity().getApplicationContext(), "Profile saved succesfully", Toast.LENGTH_LONG).show();
                             }
 
                         } else {
@@ -157,7 +159,8 @@ public class Profile extends Fragment {
 
     private void initProfile()
     {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("profiles");
+       // ParseQuery<ParseObject> query =ParseQuery.getQuery("profiles");
+        ParseQuery<ParseObject> query=new ParseQuery<ParseObject>("profiles");
         query.whereEqualTo("facebookId", myId);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override

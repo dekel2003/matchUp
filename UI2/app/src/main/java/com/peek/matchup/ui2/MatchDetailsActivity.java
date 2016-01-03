@@ -23,6 +23,7 @@ public class MatchDetailsActivity extends FragmentActivity {
         bundle.putString("namemacher", extras.getString("namemacher"));
         bundle.putString("idmacher", extras.getString("idmacher"));
         bundle.putString("idmyMatch", extras.getString("idmyMatch"));
+        bundle.putString("rec", extras.getString("rec"));
            Fragment mFragment = new MatchDetailes();
         mFragment.setArguments(bundle);
             FragmentManager fragmentManager = getSupportFragmentManager();
