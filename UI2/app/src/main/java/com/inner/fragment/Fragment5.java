@@ -18,7 +18,7 @@ import com.peek.matchup.ui2.R;
  */
 
 
-public class Fragment5 extends DialogFragment {
+public class Fragment5 extends Fragment {
     ProfilePictureView profilePictureViewMacher;
     TextView nameMacher;
 
@@ -27,9 +27,9 @@ public class Fragment5 extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v=inflater.inflate(R.layout.fragment5_layout,container,false);
-        getDialog().setTitle("Your Match");
-        String macherName = getArguments().getString("namemacher");
-        String idMacher = getArguments().getString("idmacher");
+        Bundle bundle = this.getArguments();
+        String macherName =bundle.getString("namemacher","");
+        String idMacher = bundle.getString("idmacher","");
         profilePictureViewMacher=(ProfilePictureView)v.findViewById(R.id.imageMatcher);
         nameMacher=(TextView) v.findViewById(R.id.machername);
         profilePictureViewMacher.setProfileId(idMacher);

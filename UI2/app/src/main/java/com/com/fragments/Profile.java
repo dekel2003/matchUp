@@ -40,11 +40,11 @@ import java.util.List;
 public class Profile extends Fragment {
 
     String myId;
-    String pic1;
-    String pic2;
-    String pic3;
-    String pic4;
-    String pic5;
+    String pic1="";
+    String pic2="";
+    String pic3="";
+    String pic4="";
+    String pic5="";
     ProfilePictureView profilePictureView;
     ImageView imageView1;
     ImageView imageView2;
@@ -75,6 +75,7 @@ public class Profile extends Fragment {
         imageView4=(ImageView)v.findViewById(R.id.image4);
         imageView5=(ImageView)v.findViewById(R.id.image5);
         aboutme=(EditText)v.findViewById(R.id.editText);
+        aboutme.setText("");
         save=(Button) v.findViewById(R.id.button);
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +115,8 @@ public class Profile extends Fragment {
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> nameList, ParseException e) {
-                        if (e == null) {
+                        if (e == null && nameList!=null) {
+
                             for (ParseObject Obj : nameList) {
                                 Obj.put("pic1", pic1);
                                 Obj.put("pic2", pic2);

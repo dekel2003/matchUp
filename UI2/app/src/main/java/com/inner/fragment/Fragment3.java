@@ -1,6 +1,7 @@
 package com.inner.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.com.adapters.NavAdapterFacebook;
+import com.com.fragments.MatchDetailes;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -22,6 +24,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.peek.matchup.ui2.MatchDetailsActivity;
 import com.peek.matchup.ui2.R;
 
 import org.json.JSONObject;
@@ -53,14 +56,21 @@ public class Fragment3 extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Fragment5 dialog  = new Fragment5();
+                Intent intent = new Intent(getActivity(), MatchDetailsActivity.class);
+                intent.putExtra("namemacher", ListFacebook.get(position).getMetcher().toString());
+                intent.putExtra("idmacher", ListFacebook.get(position).getMetcherid());
+                intent.putExtra("idmyMatch", ListFacebook.get(position).getId());
+                startActivity(intent);
+
+               // gridView.setVisibility(View.INVISIBLE);
+              /*  Fragment5 dialog  = new Fragment5();
                 dialog.setTargetFragment(f, position);
                 Bundle args = new Bundle();
                 args.putString("namemacher", ListFacebook.get(position).getMetcher());
                 args.putString("idmacher", ListFacebook.get(position).getMetcherid());
                 dialog.setArguments(args);
                 // Show DialogFragment
-                dialog .show(fragManager, "Dialog Fragment");
+                dialog .show(fragManager, "Dialog Fragment");*/
             }
         });
 
