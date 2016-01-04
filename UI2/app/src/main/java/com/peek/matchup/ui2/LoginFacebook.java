@@ -81,7 +81,7 @@ public class LoginFacebook extends FragmentActivity {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 if (response.getError()!=null){
-                    Log.d("Main Activity: ",response.getError().getErrorMessage());
+                    Log.d("Main Activity: ", response.getError().getErrorMessage());
                     AccessToken.refreshCurrentAccessTokenAsync();
                     ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
                     startActivityForResult(builder.build(), RCODE);
@@ -100,7 +100,6 @@ public class LoginFacebook extends FragmentActivity {
                 ParseInstallation pi = ParseInstallation.getCurrentInstallation();
                 pi.put("FacebookID",id);
                 pi.saveInBackground();
-
 
                 startActivity(i);
                 finish();
