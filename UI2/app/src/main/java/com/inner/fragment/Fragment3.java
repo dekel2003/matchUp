@@ -151,10 +151,16 @@ public class Fragment3 extends Fragment {
 
 
 
+<<<<<<< HEAD
 
 
                                         } else {
                                             Log.d("score", "Error: " + e.getMessage());
+=======
+                                            } else {
+                                                Log.d("Fragment 3: ", "Error: " + e.getMessage());
+                                            }
+>>>>>>> origin/master
                                         }
                                     }
                                 });
