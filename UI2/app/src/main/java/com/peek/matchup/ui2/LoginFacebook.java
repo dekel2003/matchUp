@@ -1,5 +1,7 @@
 package com.peek.matchup.ui2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -18,11 +20,16 @@ import com.parse.ui.ParseLoginBuilder;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 
 public class LoginFacebook extends FragmentActivity {
     LoginFacebookFragment fragment;
 
-    private static int RCODE = 53846;
+    public static int RCODE = 53846;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,25 +39,18 @@ public class LoginFacebook extends FragmentActivity {
 
         AccessToken token = AccessToken.getCurrentAccessToken();
 
+        gotoLoginScreen();
 
-
-        if (token == null) {
-            ParseUser.logOut();
-            Log.d("Main Activity: ", "null token - log out.");
-            ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
-            startActivityForResult(builder.build(), RCODE);
-        }else if(token.isExpired() || (!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser()))){
-            Log.d("Main Activity: ", "unlinked account - log out.");
-            ParseUser.logOut();
-            if (!token.getDeclinedPermissions().isEmpty())
-                token.getPermissions();
-            AccessToken.refreshCurrentAccessTokenAsync();
-            ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
-            startActivityForResult(builder.build(), RCODE);
-        }else {
-            AccessToken.refreshCurrentAccessTokenAsync();
-            proceedToMainActivity();
-        }
+//        if (!token.getDeclinedPermissions().isEmpty())
+//            Log.d("Main Activity: ", "declined permission - log in again.");
+//            gotoLoginScreen();
+//        if(!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+//            Log.d("Main Activity: ", "unlinked account - log out.");
+//            ParseUser.logOut();
+//            gotoLoginScreen();
+//        }else {
+//            proceedToMainActivity();
+//        }
 
         if(savedInstanceState==null)
         {
@@ -74,8 +74,23 @@ public class LoginFacebook extends FragmentActivity {
         }
     }
 
+    private void gotoLoginScreen(){
+        ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
+        startActivityForResult(builder.build(), RCODE);
+    }
+
     private void proceedToMainActivity() {
         Log.d("Main Activity: ", "000000000000");
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        if (!token.getDeclinedPermissions().isEmpty()) {
+            Log.d("Main Activity: ", "declined permission - log in again.");
+            gotoLoginScreen();
+        }
+        if(!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+            Log.d("Main Activity: ", "unlinked account - log out.");
+            ParseUser.logOut();
+            gotoLoginScreen();
+        }
         final AccessToken accessToken=AccessToken.getCurrentAccessToken();
         GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
@@ -110,6 +125,8 @@ public class LoginFacebook extends FragmentActivity {
         request.setParameters(parameters);
         request.executeAsync();
     }
+
+
 
 
 }
