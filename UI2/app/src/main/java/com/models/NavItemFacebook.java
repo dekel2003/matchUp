@@ -9,6 +9,8 @@ public class NavItemFacebook {
     private String metcher;//only for gridvuew
     private String metcherid;//only for gridvuew
     private String rec;//only for gridvuew
+    private String matchID;
+    private String side;
 
 
     public NavItemFacebook(String title, String id) {
@@ -16,12 +18,14 @@ public class NavItemFacebook {
         this.id = id;
     }
 
-    public NavItemFacebook(String title, String id,String metcher, String metcherid,String rec) {
+    public NavItemFacebook(String title, String id,String metcher, String metcherid,String rec,String matchID,String side) {
         this.title = title;
         this.id = id;
         this.metcher=metcher;
         this.metcherid=metcherid;
         this.rec=rec;
+        this.matchID=matchID;
+        this.side=side;
     }
 
     public String getTitle() {
@@ -63,5 +67,21 @@ public class NavItemFacebook {
 
     public void setRec(String rec) {
         this.rec = rec;
+    }
+
+    public String getMatchID() {
+        return matchID;
+    }
+
+    public void setMatchID(String matchID) {
+        this.matchID = matchID;
+    }
+
+    public String getSide() {
+        return side;
+    }
+
+    public void setSide(String side) {
+        this.side = side;
     }
 }

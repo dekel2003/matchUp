@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.com.fragments.MatchPicSlide;
@@ -27,14 +29,37 @@ import java.util.List;
 
 public class FragmentMatchProfile extends Fragment {
     TextView description;
+    Button accept;
+    Button decline;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v=inflater.inflate(R.layout.fragmentmatchprofile_layout, container, false);
-        description=(TextView) v.findViewById(R.id.textView);
-        Bundle bundle = this.getArguments();
+        final Bundle bundle = this.getArguments();
         String idmyMatch =bundle.getString("idmyMatch", "");
+
+        description=(TextView) v.findViewById(R.id.textView);
+        accept=(Button)v.findViewById(R.id.btnY);
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveAns(bundle.getString("matchId", ""),bundle.getString("side", ""));
+                getActivity().finish();
+
+            }
+        });
+        decline=(Button)v.findViewById(R.id.btnN);
+        decline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteMatch(bundle.getString("matchId", ""));
+                getActivity().finish();
+            }
+        });
+
+
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("profiles");
         query.whereEqualTo("facebookId", idmyMatch);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -63,5 +88,46 @@ public class FragmentMatchProfile extends Fragment {
 
 
         return v;
+    }
+
+    void saveAns(String matchid,final String side)
+    {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
+        query.whereEqualTo("objectId", matchid);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    ParseObject person = list.get(0);
+                    if(side.compareTo("1")==0)
+                        person.put("approve1", "1");
+                    if(side.compareTo("2")==0)
+                        person.put("approve2", "1");
+                    person.saveInBackground();
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+
+    }
+
+    void deleteMatch(String matchid)
+    {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
+        query.whereEqualTo("objectId", matchid);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> invites, ParseException e) {
+                if (e == null) {
+                    // iterate over all messages and delete them
+                    for(ParseObject invite : invites)
+                    {
+                        invite.deleteInBackground();
+                    }
+                } else {
+                    //Handle condition here
+                }
+            }
+        });
+
     }
 }

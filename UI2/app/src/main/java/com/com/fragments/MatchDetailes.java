@@ -39,6 +39,8 @@ public class MatchDetailes extends Fragment implements ViewPager.OnPageChangeLis
     String idmacher;
     String idmyMatch;
     String rec;
+    String matchId;
+    String side;
 
 
     @Nullable
@@ -51,6 +53,8 @@ public class MatchDetailes extends Fragment implements ViewPager.OnPageChangeLis
         idmacher = getArguments().getString("idmacher");
         idmyMatch=getArguments().getString("idmyMatch");
         rec=getArguments().getString("rec");
+        matchId=getArguments().getString("matchId");
+        side=getArguments().getString("side");
         i++;
         initVeiwPager();
         initTabHost(savedInstanceState);
@@ -101,6 +105,8 @@ public class MatchDetailes extends Fragment implements ViewPager.OnPageChangeLis
         Fragment fragmentmymatch=(new FragmentMatchProfile());
         Bundle bundle2 = new Bundle();
         bundle2.putString("idmyMatch", idmyMatch);
+        bundle2.putString("matchId", matchId);
+        bundle2.putString("side", side);
         fragmentmymatch.setArguments(bundle2);
         List<Fragment> listFragments=new ArrayList<Fragment>();
 

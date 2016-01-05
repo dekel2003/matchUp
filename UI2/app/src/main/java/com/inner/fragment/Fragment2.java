@@ -128,6 +128,8 @@ public class Fragment2 extends Fragment {
 
                                 addMatch.put("matcher", id);
                                 addMatch.put("matcherName", name);
+                                addMatch.put("approve1", "0");
+                                addMatch.put("approve2", "0");
 
                                 addMatch.saveInBackground();
 
