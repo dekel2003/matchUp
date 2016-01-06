@@ -61,6 +61,15 @@ public class ChatActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initControls();
+
+        JSONObject json = null;
+        try {
+            json = new JSONObject(getIntent().getStringExtra("message"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.i("Dekel", json.toString());
     }
 
     @Override

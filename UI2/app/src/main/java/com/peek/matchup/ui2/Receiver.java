@@ -27,6 +27,10 @@ public class Receiver extends ParsePushBroadcastReceiver {
 
         try {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+            Intent intentChatInformation = new Intent(context, ChatActivity.class);
+
+            intentChatInformation.putExtra("message", json.toString());
+
             Log.d("Dekel", "JSONE object: " + json.toString());
 //            if (ChatActivity.active)
 
