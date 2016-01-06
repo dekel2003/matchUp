@@ -65,11 +65,14 @@ public class ChatActivity extends ActionBarActivity {
         JSONObject json = null;
         try {
             json = new JSONObject(getIntent().getStringExtra("message"));
+            Log.i("Dekel", json.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+            
         }
 
-        Log.i("Dekel", json.toString());
+
     }
 
     @Override
