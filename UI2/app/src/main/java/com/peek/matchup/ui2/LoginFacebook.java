@@ -28,6 +28,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class LoginFacebook extends FragmentActivity {
     LoginFacebookFragment fragment;
+    AccessToken token;
 
     public static int RCODE = 53846;
 
@@ -37,9 +38,14 @@ public class LoginFacebook extends FragmentActivity {
 
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
 
-        AccessToken token = AccessToken.getCurrentAccessToken();
+        token = AccessToken.getCurrentAccessToken();
 
-        gotoLoginScreen();
+
+        if (token!=null)
+            proceedToMainActivity();
+        else
+            gotoLoginScreen();
+
 
 //        if (!token.getDeclinedPermissions().isEmpty())
 //            Log.d("Main Activity: ", "declined permission - log in again.");
@@ -82,6 +88,7 @@ public class LoginFacebook extends FragmentActivity {
     private void proceedToMainActivity() {
         Log.d("Main Activity: ", "000000000000");
         AccessToken token = AccessToken.getCurrentAccessToken();
+
         if (!token.getDeclinedPermissions().isEmpty()) {
             Log.d("Main Activity: ", "declined permission - log in again.");
             gotoLoginScreen();
