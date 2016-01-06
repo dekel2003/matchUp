@@ -69,6 +69,8 @@
             android:layout_below="@+id/birthday"
          />
 
+
+
     </RelativeLayout>
     <ListView
         android:id="@+id/nav_list"

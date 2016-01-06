@@ -22,8 +22,8 @@ public class Receiver extends ParsePushBroadcastReceiver {
     @Override
     public void onPushReceive(Context context, Intent intent) {
 //        Toast.makeText(context, "Push received!!!!.", Toast.LENGTH_LONG).show();
-//        super.onReceive(context, intent);
 
+        super.onPushReceive(context, intent);
 
         try {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
