@@ -1,5 +1,9 @@
 package com.chat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -62,18 +66,41 @@ public class ChatActivity extends ActionBarActivity {
         setContentView(R.layout.activity_chat);
         initControls();
 
-        JSONObject json = null;
-        try {
-            json = new JSONObject(getIntent().getStringExtra("message"));
-            Log.i("Dekel", json.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e){
-            
-        }
-
-
     }
+
+    //register your activity onResume()
+    @Override
+    public void onResume() {
+        super.onResume();
+        getApplicationContext().registerReceiver(mMessageReceiver, new IntentFilter("updateChat"));
+    }
+
+    //Must unregister onPause()
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getApplicationContext().unregisterReceiver(mMessageReceiver);
+    }
+
+    //This is the handler that will manager to process the broadcast intent
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            // Extract data included in the Intent
+            JSONObject json = null;
+            try {
+                json = new JSONObject(getIntent().getStringExtra("message"));
+                Log.i("Dekel", json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e){
+
+            }
+
+            //do other stuff here
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
