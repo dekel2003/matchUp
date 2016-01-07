@@ -1,5 +1,7 @@
 package com.chat;
 
+import org.joda.time.DateTime;
+
 import java.util.Date;
 
 /**
@@ -10,7 +12,7 @@ public class ChatMessage {
     private boolean isMe;
     private String message;
     private Long userId;
-    private Date dateTime;
+    private String dateTime;
 
     public String getId() {
         return id;
@@ -44,11 +46,11 @@ public class ChatMessage {
         this.userId = userId;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return dateTime;
     }
 
-    public void setDate(Date dateTime) {
+    public void setDate(String dateTime) {
         this.dateTime = dateTime;
     }
 }

@@ -28,13 +28,18 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.peek.matchup.ui2.R;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 import static com.helperClasses.SendNotifications.SendJSONByParseId;
 
@@ -59,6 +64,7 @@ public class ChatActivity extends ActionBarActivity {
     private Button sendBtn;
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
+    private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.US);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,33 +78,50 @@ public class ChatActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
-        getApplicationContext().registerReceiver(mMessageReceiver, new IntentFilter("updateChat"));
+        registerReceiver(mMessageReceiver, new IntentFilter("updateChat"));
+        Log.i("Dekel Chat Register:", "registered");
     }
 
     //Must unregister onPause()
     @Override
     protected void onPause() {
         super.onPause();
-        getApplicationContext().unregisterReceiver(mMessageReceiver);
+        unregisterReceiver(mMessageReceiver);
+        Log.i("Dekel Chat Register:", "unregistered");
     }
 
     //This is the handler that will manager to process the broadcast intent
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            Log.i("Dekel Chat Recieve:", "start");
             // Extract data included in the Intent
             JSONObject json = null;
             try {
-                json = new JSONObject(getIntent().getStringExtra("message"));
-                Log.i("Dekel", json.toString());
+                json = new JSONObject(intent.getStringExtra("message"));
+//                Date date = format.parse(json.getString("dateTime"));
+//                json.put("dateTime",date);
+                Log.i("Dekel Chat Recieve: ", json.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (NullPointerException e){
-
+                Log.i("Dekel Chat Recieve: ", "null pointer exception..");
             }
 
-            //do other stuff here
+
+            Gson gson = new Gson();
+            ChatMessage chatMessage = null;
+            if (json != null) {
+                chatMessage = gson.fromJson(json.toString(), ChatMessage.class);
+                chatMessage.setMe(false);
+                displayMessage(chatMessage);
+            }else{
+                Log.e("Dekel Chat", "json is null");
+            }
+
+
+
+
         }
     };
 
@@ -168,8 +191,8 @@ public class ChatActivity extends ActionBarActivity {
                 message.put("chatId", chatId);
                 chatMessage.setMessage(messageText);
                 message.put("content", messageText);
-                chatMessage.setDate(new Date());
-                message.put("date", chatMessage.getDate());
+                chatMessage.setDate(format.format(new Date()));
+                message.put("date", format.parse(chatMessage.getDate(), new ParsePosition(0)));
                 chatMessage.setMe(true);
 
                 messageET.setText("");
@@ -177,7 +200,10 @@ public class ChatActivity extends ActionBarActivity {
                 Gson gson = new Gson();
                 JSONObject request = null;
                 try {
-                    request = new JSONObject(gson.toJson(chatMessage));
+                    JSONObject msgObj = new JSONObject(gson.toJson(chatMessage));
+                    request = new JSONObject();
+                    request.putOpt("value", msgObj);
+                    request.put("intention","updateChat");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -234,13 +260,14 @@ public class ChatActivity extends ActionBarActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        assert messages != null;
         for (ParseObject message : messages) {
             ChatMessage msg = new ChatMessage();
             msg.setId(message.getString("senderId"));
             msg.setMe(true);
             if (!msg.getId().equals(id))
                 msg.setMe(false);
-            msg.setDate(message.getDate("date"));
+            msg.setDate(format.format(message.getDate("date")));
             msg.setMessage(message.getString("content"));
             displayMessage(msg);
         }
@@ -255,13 +282,13 @@ public class ChatActivity extends ActionBarActivity {
         msg.setId("1");
         msg.setMe(false);
         msg.setMessage("Hi");
-        msg.setDate(new Date());
+        msg.setDate(format.format(new Date()));
         chatHistory.add(msg);
         ChatMessage msg1 = new ChatMessage();
         msg1.setId("2");
         msg1.setMe(false);
         msg1.setMessage("How r u doing???");
-        msg1.setDate(new Date());
+        msg1.setDate(format.format(new Date()));
         chatHistory.add(msg1);
 
         adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());

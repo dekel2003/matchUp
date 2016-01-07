@@ -15,6 +15,8 @@ import com.parse.ParsePushBroadcastReceiver;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 public class Receiver extends ParsePushBroadcastReceiver {
 
     public Receiver(){super();}
@@ -27,8 +29,8 @@ public class Receiver extends ParsePushBroadcastReceiver {
 
         try {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
-            Intent intentChatInformation = new Intent("updateChat");
-
+            Intent intentChatInformation = new Intent(json.getString("intention"));
+            json = json.getJSONObject("value");
             intentChatInformation.putExtra("message", json.toString());
             context.sendBroadcast(intentChatInformation);
 

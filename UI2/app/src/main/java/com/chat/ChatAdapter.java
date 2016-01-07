@@ -70,7 +70,7 @@ public class ChatAdapter extends BaseAdapter {
         boolean myMsg = chatMessage.getIsme() ;//Just a dummy check to simulate whether it me or other sender
         setAlignment(holder, myMsg);
         holder.txtMessage.setText(chatMessage.getMessage());
-        holder.txtInfo.setText(DateFormat.getDateTimeInstance().format(chatMessage.getDate()));
+        holder.txtInfo.setText(chatMessage.getDate());
         holder.txtInfo.setVisibility(View.GONE);
 
         convertView.setOnClickListener(new View.OnClickListener() {
