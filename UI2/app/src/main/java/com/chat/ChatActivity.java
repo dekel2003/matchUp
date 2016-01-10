@@ -187,7 +187,7 @@ public class ChatActivity extends ActionBarActivity {
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setId(id);
                 message.put("senderId", id);
-                int chatId = getIntent().getIntExtra("chatId", -1);
+                String chatId = getIntent().getStringExtra("chatId");
                 message.put("chatId", chatId);
                 chatMessage.setMessage(messageText);
                 message.put("content", messageText);
@@ -203,7 +203,7 @@ public class ChatActivity extends ActionBarActivity {
                     JSONObject msgObj = new JSONObject(gson.toJson(chatMessage));
                     request = new JSONObject();
                     request.putOpt("value", msgObj);
-                    request.put("intention","updateChat");
+                    request.put("intention", "updateChat");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -248,8 +248,8 @@ public class ChatActivity extends ActionBarActivity {
 
     private void loadHistory(String id) {
 //        final String id = getIntent().getStringExtra("id");
-        int chatId = getIntent().getIntExtra("chatId", -1);
-        if (chatId == -1) {
+        String chatId = getIntent().getStringExtra("chatId");
+        if (chatId.isEmpty()) {
             Log.d("Chat: ", "Error - chat ID is invalid");
         }
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ChatMessages");

@@ -38,7 +38,7 @@ public class Fragment4 extends Fragment {
                 args.putString("id", ParseUser.getCurrentUser().getObjectId());
                 args.putString("id1", "Ksmw7nvF86");  // TODO: give me the first User-Object_ID
                 args.putString("id2", "T4S0XHNx2L");  // TODO: give me the second User-Object_ID
-                args.putInt("chatId",1234); // TODO: create unique chat-id for this specific conversation.
+                args.putString("chatId","1234"); // TODO: create unique chat-id for this specific conversation.
                 intent.putExtras(args);
                 startActivity(intent);
             }

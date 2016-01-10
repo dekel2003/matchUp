@@ -120,8 +120,12 @@ public class LoginFacebook extends FragmentActivity {
 
 
                 ParseInstallation pi = ParseInstallation.getCurrentInstallation();
-                pi.put("FacebookID",id);
+                pi.put("FacebookID", id);
                 pi.saveInBackground();
+
+                ParseUser pu = ParseUser.getCurrentUser();
+                pu.put("FacebookID",id);
+                pu.saveInBackground();
 
                 startActivity(i);
                 finish();

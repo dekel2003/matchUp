@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.chat.ChatActivity;
 import com.com.adapters.NavAdapterFacebook;
 import com.com.fragments.MatchDetailes;
 import com.facebook.AccessToken;
@@ -21,9 +22,11 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.models.NavItemFacebook;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.peek.matchup.ui2.MatchDetailsActivity;
 import com.peek.matchup.ui2.R;
 
@@ -31,6 +34,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.helperClasses.parseHelpers.getUserIdByFacebookId;
 
 
 /**
@@ -42,7 +47,7 @@ public class Fragment3 extends Fragment {
     GridView gridView2;
     List<NavItemFacebook> ListFacebook;
     List<NavItemFacebook> ListFacebook2;
-
+    List<ParseObject> Chats;
 
 
     NavAdapterFacebook navAdapterFacebook;
@@ -54,12 +59,14 @@ public class Fragment3 extends Fragment {
         View v = inflater.inflate(R.layout.fragment3_layout, container, false);
        // listView=(ListView) v.findViewById(R.id.listViewMatches);
 
+        Chats = new ArrayList<>();
+
         gridView=(GridView) v.findViewById(R.id.gridView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MatchDetailsActivity.class);
-                intent.putExtra("namemacher", ListFacebook.get(position).getMetcher().toString());
+                intent.putExtra("namemacher", ListFacebook.get(position).getMetcher());
                 intent.putExtra("idmacher", ListFacebook.get(position).getMetcherid());
                 intent.putExtra("idmyMatch", ListFacebook.get(position).getId());
                 intent.putExtra("rec", ListFacebook.get(position).getRec());
@@ -73,6 +80,58 @@ public class Fragment3 extends Fragment {
         });
         gridView2=(GridView) v.findViewById(R.id.gridView2);
 
+        gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String facebook_matcher = Chats.get(position).getString("matcher");
+                String facebook_id1 = Chats.get(position).getString("id1");
+                String facebook_id2 = Chats.get(position).getString("id2");
+
+                String matcher = getUserIdByFacebookId(facebook_matcher);
+                String id1 = getUserIdByFacebookId(facebook_id1);
+                String id2 = getUserIdByFacebookId(facebook_id2);
+
+                ParseQuery<ParseObject> existingChat = ParseQuery.getQuery("OpenChats");
+                existingChat.whereEqualTo("matcher", matcher).whereEqualTo("id1", id1).whereEqualTo("id2", id2);
+
+                List<ParseObject> foundExistingChat = null;
+                try {
+                    foundExistingChat = existingChat.find();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                assert foundExistingChat != null;
+                String chatID;
+                if (!foundExistingChat.isEmpty()){
+                    chatID = foundExistingChat.get(0).getObjectId();
+                }else {
+                    ParseObject chat = new ParseObject("OpenChats");
+                    chat.put("matcher", matcher);
+                    chat.put("id1", id1);
+                    chat.put("id2", id2);
+
+                    try {
+                        chat.save();
+                    } catch (ParseException e) {
+                        Log.d("Fragment 3:", "Error in creating a new chat.");
+                        e.printStackTrace();
+                    }
+
+                    chatID = chat.getObjectId();
+                }
+                Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
+                Bundle args = new Bundle();
+                args.putString("id", matcher);
+                args.putString("id1", id1);  //  the first User-Object_ID
+                args.putString("id2", id2);  //  the second User-Object_ID
+                args.putString("chatId", chatID); // unique chat-id for this specific conversation.
+                intent.putExtras(args);
+                startActivity(intent);
+
+            }
+        });
 
 
 
@@ -110,8 +169,10 @@ public class Fragment3 extends Fragment {
                                     ListFacebook = new ArrayList<NavItemFacebook>();
                                     ListFacebook2 = new ArrayList<NavItemFacebook>();
                                     for (int i = 0; i < matches.size(); i++) {
-                                        if(matches.get(i).get("approve1").toString().compareTo("1")==0 && matches.get(i).get("approve2").toString().compareTo("1")==0)
-                                            ListFacebook2.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(),matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(),matches.get(i).get("rec2").toString(),matches.get(i).getObjectId().toString(),"1"));
+                                        if (matches.get(i).get("approve1").toString().compareTo("1") == 0 && matches.get(i).get("approve2").toString().compareTo("1") == 0){
+                                            ListFacebook2.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(), matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(), matches.get(i).get("rec2").toString(), matches.get(i).getObjectId().toString(), "1"));
+                                            Chats.add(matches.get(i));
+                                        }
                                         else if(matches.get(i).get("approve1").toString().compareTo("1")!=0)
                                         {
                                             ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(),matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(),matches.get(i).get("rec2").toString(),matches.get(i).getObjectId().toString(),"1"));
@@ -130,11 +191,11 @@ public class Fragment3 extends Fragment {
 
                                             //allMatches.addAll(matches);
                                             for (int i = 0; i < matches2.size(); i++) {
-                                                if(matches2.get(i).get("approve1").toString().compareTo("1")==0 && matches2.get(i).get("approve2").toString().compareTo("1")==0)
-                                                    ListFacebook2.add(new NavItemFacebook(matches2.get(i).get("name1").toString(), matches2.get(i).get("id1").toString(),matches2.get(i).get("matcherName").toString(), matches2.get(i).get("matcher").toString(),matches2.get(i).get("rec1").toString(),matches2.get(i).getObjectId().toString(),"2"));
-                                                else  if( matches2.get(i).get("approve2").toString().compareTo("1")!=0)
+                                                if(matches2.get(i).getString("approve1").compareTo("1")==0 && matches2.get(i).getString("approve2").compareTo("1")==0)
+                                                    ListFacebook2.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(),"2"));
+                                                else  if(matches2.get(i).getString("approve2").compareTo("1")!=0)
                                                 {
-                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).get("name1").toString(), matches2.get(i).get("id1").toString(),matches2.get(i).get("matcherName").toString(), matches2.get(i).get("matcher").toString(),matches2.get(i).get("rec1").toString(),matches2.get(i).getObjectId().toString(),"2"));
+                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(),"2"));
 
                                                 }
 
