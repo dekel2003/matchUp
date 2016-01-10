@@ -260,7 +260,8 @@ public class ChatActivity extends ActionBarActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        assert messages != null;
+        if (messages == null)
+            return;
         for (ParseObject message : messages) {
             ChatMessage msg = new ChatMessage();
             msg.setId(message.getString("senderId"));
