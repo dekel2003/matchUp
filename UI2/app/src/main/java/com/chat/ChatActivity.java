@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.com.fragments.Setting;
 import com.google.gson.Gson;
 import com.helperClasses.SendNotifications;
+import com.paint.Paint_chat;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -118,10 +119,6 @@ public class ChatActivity extends ActionBarActivity {
             }else{
                 Log.e("Dekel Chat", "json is null");
             }
-
-
-
-
         }
     };
 
@@ -141,7 +138,13 @@ public class ChatActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(ChatActivity.this,Paint_chat.class);
+            intent.putExtra("chatId",getIntent().getStringExtra("chatId"));
+            intent.putExtra("id1",getIntent().getStringExtra("id1"));
+            intent.putExtra("id2",getIntent().getStringExtra("id2"));
+            intent.putExtra("senderId",ParseUser.getCurrentUser().getObjectId());
+
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

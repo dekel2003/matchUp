@@ -9,7 +9,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
 
     <!--
       IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
@@ -106,6 +108,14 @@
             android:name="com.chat.ChatActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".MatchDetailsActivity" >
+        </activity>
+        <activity
+            android:name="com.paint.Paint_chat"
+            android:label="@string/title_activity_paint_chat" >
+        </activity>
+        <activity
+            android:name="com.paint.ViewSavedActivity"
+            android:label="@string/title_activity_view_saved" >
         </activity>
     </application>
 

@@ -1,6 +1,7 @@
 package com.inner.fragment;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.widget.Button;
 
 import com.chat.ChatActivity;
 import com.facebook.AccessToken;
+import com.paint.Paint_chat;
 import com.parse.ParseUser;
 import com.peek.matchup.ui2.R;
 
@@ -29,17 +31,8 @@ public class Fragment4 extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
-                Bundle args = new Bundle();
-//                args.putString("id", AccessToken.getCurrentAccessToken().getUserId());
-//                args.putString("id1", "895079157265629");  // TODO: give me the first User-ID
-//                args.putString("id2", "966642636741330");  // TODO: give me the second User-ID
-                // It's better to work in parse with the parse "Object-ID" rather than the Facebook ID.
-                args.putString("id", ParseUser.getCurrentUser().getObjectId());
-                args.putString("id1", "Ksmw7nvF86");  // TODO: give me the first User-Object_ID
-                args.putString("id2", "T4S0XHNx2L");  // TODO: give me the second User-Object_ID
-                args.putString("chatId","1234"); // TODO: create unique chat-id for this specific conversation.
-                intent.putExtras(args);
+                Intent intent = new Intent(getActivity().getApplicationContext(), Paint_chat.class);
+
                 startActivity(intent);
             }
         });

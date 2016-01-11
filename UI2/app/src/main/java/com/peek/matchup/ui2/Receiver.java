@@ -31,10 +31,18 @@ public class Receiver extends ParsePushBroadcastReceiver {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
             Intent intentChatInformation = new Intent(json.getString("intention"));
             json = json.getJSONObject("value");
+            Log.d("Dekel", "JSONE object: " + json.toString());
+
             intentChatInformation.putExtra("message", json.toString());
+//            if (intentChatInformation.getAction().equals("updateChat")) {
+//                intentChatInformation.putExtra("message", json.toString());
+//            }else if (intentChatInformation.getAction().equals("updateImage")) {
+//                intentChatInformation.putExtra("message", json.toString());
+//            }
+
             context.sendBroadcast(intentChatInformation);
 
-            Log.d("Dekel", "JSONE object: " + json.toString());
+
 //            if (ChatActivity.active)
 
         } catch (JSONException e) {
