@@ -152,6 +152,9 @@ public class ChatActivity extends ActionBarActivity {
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
 
+        adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());
+        messagesContainer.setAdapter(adapter);
+
         TextView meLabel = (TextView) findViewById(R.id.meLbl);
         TextView companionLabel1 = (TextView) findViewById(R.id.friendLabel1);
         TextView companionLabel2 = (TextView) findViewById(R.id.friendLabel2);
@@ -162,18 +165,19 @@ public class ChatActivity extends ActionBarActivity {
         Log.d("Chat Activity: ", getIntent().getStringExtra("id1"));
         Log.d("Chat Activity: ", getIntent().getStringExtra("id2"));
 
-        final String id = getIntent().getStringExtra("id");
+//        final String id = getIntent().getStringExtra("id");
         final String id1 = getIntent().getStringExtra("id1");
         final String id2 = getIntent().getStringExtra("id2");
 
 //          SendNotifications.notifyByParseId(id);
 
-        meLabel.setText(getUserNameByParseID(id));
+//        meLabel.setText(getUserNameByParseID(id));
 
         companionLabel1.setText(getUserNameByParseID(id1));
         companionLabel2.setText(getUserNameByParseID(id2));
 
-        loadDummyHistory();
+//        loadDummyHistory();
+        final String id = ParseUser.getCurrentUser().getObjectId();
         loadHistory(id);
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -208,8 +212,10 @@ public class ChatActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
 
-                SendJSONByParseId(id1, request);
-                SendJSONByParseId(id2, request);
+                if (id.equals(id2))
+                    SendJSONByParseId(id1, request);
+                else
+                    SendJSONByParseId(id2, request);
 
                 displayMessage(chatMessage);
                 message.saveInBackground();
@@ -292,8 +298,7 @@ public class ChatActivity extends ActionBarActivity {
         msg1.setDate(format.format(new Date()));
         chatHistory.add(msg1);
 
-        adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());
-        messagesContainer.setAdapter(adapter);
+
 
                 for(int i=0; i<chatHistory.size(); i++) {
                     ChatMessage message = chatHistory.get(i);

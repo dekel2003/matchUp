@@ -191,8 +191,10 @@ public class Fragment3 extends Fragment {
 
                                             //allMatches.addAll(matches);
                                             for (int i = 0; i < matches2.size(); i++) {
-                                                if(matches2.get(i).getString("approve1").compareTo("1")==0 && matches2.get(i).getString("approve2").compareTo("1")==0)
-                                                    ListFacebook2.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(),"2"));
+                                                if(matches2.get(i).getString("approve1").compareTo("1")==0 && matches2.get(i).getString("approve2").compareTo("1")==0) {
+                                                    ListFacebook2.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(), "2"));
+                                                    Chats.add(matches2.get(i));
+                                                }
                                                 else  if(matches2.get(i).getString("approve2").compareTo("1")!=0)
                                                 {
                                                     ListFacebook.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(),"2"));

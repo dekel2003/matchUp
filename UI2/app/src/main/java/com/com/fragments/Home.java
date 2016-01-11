@@ -27,22 +27,23 @@ import java.util.List;
 /**
  * Created by User on 06/12/2015.
  */
-public class Home extends Fragment implements ViewPager.OnPageChangeListener,TabHost.OnTabChangeListener{
+public class Home extends Fragment implements ViewPager.OnPageChangeListener,TabHost.OnTabChangeListener {
 
     ViewPager viewPager;
     TabHost tabHost;
     MyFragmentPagerAdaper myFragmentPagerAdaper;
-    int i=0;
+    int i = 0;
     View v;
     Fragment2 fragment2;
 
+    int curr_fragment = 1;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        v=inflater.inflate(R.layout.tabs_view_pager_layout,container,false);
+        v = inflater.inflate(R.layout.tabs_view_pager_layout, container, false);
 
         i++;
         initVeiwPager();
@@ -53,25 +54,28 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     }
 
     private void initTabHost(Bundle savedInstanceState) {
-        tabHost=(TabHost)v.findViewById(R.id.tabhost);
+        tabHost = (TabHost) v.findViewById(R.id.tabhost);
         tabHost.setup();
-        String [] tabNames={"tab1","tab2","tab3","tab4"};
-        int [] icons={R.mipmap.appicon,R.mipmap.connect,R.mipmap.mymatch,R.mipmap.chat};
-        for(int i=0;i<tabNames.length;i++)
-        {
+        String[] tabNames = {"tab1", "tab2", "tab3", "tab4"};
+        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch, R.mipmap.chat};
+        for (int i = 0; i < tabNames.length; i++) {
             TabHost.TabSpec tabSpec;
-            tabSpec=tabHost.newTabSpec(tabNames[i]);
-            tabSpec.setIndicator("", ContextCompat.getDrawable(getActivity(),icons[i]));
+            tabSpec = tabHost.newTabSpec(tabNames[i]);
+            tabSpec.setIndicator("", ContextCompat.getDrawable(getActivity(), icons[i]));
             //tabSpec.setIndicator(tabNames[i],getResources().getDrawable(R.mipmap.home));
             tabSpec.setContent(new FakeContant(getActivity()));
             tabHost.addTab(tabSpec);
 
+            if (savedInstanceState != null) {
+                tabHost.setCurrentTab(curr_fragment);
+            }
+
 
         }
 
-        for(int i=0; i<tabNames.length; i++) {
+        for (int i = 0; i < tabNames.length; i++) {
             tabHost.getTabWidget().getChildAt(i).getLayoutParams().height *= 1.7;
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width= 150;
+            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width = 150;
         }
 
         tabHost.setOnTabChangedListener(this);
@@ -80,32 +84,31 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     }
 
     private void initVeiwPager() {
-        viewPager=(ViewPager)v.findViewById(R.id.view_pager);
-        viewPager.setPageTransformer(true, new DepthPageTransformer ());
-        fragment2=new Fragment2();
-        List<Fragment> listFragments=new ArrayList<Fragment>();
+        viewPager = (ViewPager) v.findViewById(R.id.view_pager);
+        viewPager.setPageTransformer(true, new DepthPageTransformer());
+        fragment2 = new Fragment2();
+        List<Fragment> listFragments = new ArrayList<Fragment>();
         listFragments.add(new Fragment1());
         listFragments.add(fragment2);
         listFragments.add(new Fragment3());
         listFragments.add(new Fragment4());
         //listFragments.add(new Fragment5());
         //listFragments.add(new Fragment6());
-        myFragmentPagerAdaper=new MyFragmentPagerAdaper(getChildFragmentManager(),listFragments);
+        myFragmentPagerAdaper = new MyFragmentPagerAdaper(getChildFragmentManager(), listFragments);
         viewPager.setAdapter(myFragmentPagerAdaper);
         viewPager.setOnPageChangeListener(this);
 
     }
 
 
-
-
     @Override
     public void onTabChanged(String tabId) {
-        int SelectedItem=tabHost.getCurrentTab();
+        int SelectedItem = tabHost.getCurrentTab();
+        curr_fragment = SelectedItem;
         viewPager.setCurrentItem(SelectedItem);
-        HorizontalScrollView horizontalScrollView=(HorizontalScrollView)v.findViewById(R.id.h_scroll_view);
-        View tabView=tabHost.getCurrentTabView();
-        int scrollpos=tabView.getLeft()-(horizontalScrollView.getWidth()-tabView.getWidth())/2;
+        HorizontalScrollView horizontalScrollView = (HorizontalScrollView) v.findViewById(R.id.h_scroll_view);
+        View tabView = tabHost.getCurrentTabView();
+        int scrollpos = tabView.getLeft() - (horizontalScrollView.getWidth() - tabView.getWidth()) / 2;
         horizontalScrollView.smoothScrollTo(scrollpos, 0);
 
     }
@@ -129,6 +132,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        fragment2.onActivityResult(requestCode,resultCode,data);
+        fragment2.onActivityResult(requestCode, resultCode, data);
     }
+
 }

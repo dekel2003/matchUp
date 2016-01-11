@@ -24,13 +24,20 @@ import com.com.fragments.Home;
 import com.com.fragments.Out;
 import com.com.fragments.Profile;
 import com.com.fragments.Setting;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.ProfilePictureView;
 import com.models.NavIteam;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
+import com.parse.ui.ParseLoginBuilder;
 
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -47,6 +54,9 @@ public class MainActivity extends ActionBarActivity {
     Home home;
     Profile profile;
 
+    String name,id;
+
+
     ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
@@ -55,23 +65,22 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String name=getIntent().getStringExtra("name");
-        String id=getIntent().getStringExtra("id");
-        String birthday=getIntent().getStringExtra("birthday");
 
-        Years age = Years.yearsBetween(LocalDate.parse(birthday, DateTimeFormat.forPattern("MM/dd/yyyy")), LocalDate.now());
+        loadUserDetails();
 
-        ((TextView) findViewById(R.id.birthday)).setText(Integer.toString(age.getYears()));
-        Log.d("MainActivity: bday",age.toString());
 
-        String gender=getIntent().getStringExtra("gender");
-        Log.d("MainActivity: gender",gender);
-        ((TextView) findViewById(R.id.gender)).setText(gender);
+//        String birthday=getIntent().getStringExtra("birthday");
 
-        ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
-        profilePictureView.setProfileId(id);
-        TextView nametxt=(TextView) findViewById(R.id.nametxt);
-        nametxt.setText(name);
+//        Years age = Years.yearsBetween(LocalDate.parse(birthday, DateTimeFormat.forPattern("MM/dd/yyyy")), LocalDate.now());
+
+//        ((TextView) findViewById(R.id.birthday)).setText(Integer.toString(age.getYears()));
+//        Log.d("MainActivity: bday",age.toString());
+
+//        String gender=getIntent().getStringExtra("gender");
+//        Log.d("MainActivity: gender",gender);
+//        ((TextView) findViewById(R.id.gender)).setText(gender);
+
+
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
 
@@ -161,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        home.onActivityResult(requestCode,resultCode,data);
+        home.onActivityResult(requestCode, resultCode, data);
 
     }
 
@@ -180,4 +189,65 @@ public class MainActivity extends ActionBarActivity {
         // Logs 'app deactivate' App Event.
         AppEventsLogger.deactivateApp(this);
     }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        super.onSaveInstanceState(savedInstanceState);
+//        // Save UI state changes to the savedInstanceState.
+//        // This bundle will be passed to onCreate if the process is
+//        // killed and restarted.
+//        savedInstanceState.putInt("frag", curr_fragment);
+//        Log.i("Main Activity 3:", savedInstanceState.toString());
+//
+//        // etc.
+//    }
+
+    private void loadUserDetails(){
+        final AccessToken accessToken=AccessToken.getCurrentAccessToken();
+        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                if (response.getError()!=null){
+                    Log.d("Main Activity: ", response.getError().getErrorMessage());
+                    return;
+                }
+                Log.d("Main Activity: ", "connected with Token: " + accessToken.getToken());
+                name=object.optString("name");
+                id=object.optString("id");
+
+                ParseInstallation pi = ParseInstallation.getCurrentInstallation();
+                pi.put("FacebookID", id);
+                pi.saveInBackground();
+
+                ParseUser pu = ParseUser.getCurrentUser();
+                pu.put("FacebookID",id);
+                pu.saveInBackground();
+
+                ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
+                profilePictureView.setProfileId(id);
+                TextView nametxt=(TextView) findViewById(R.id.nametxt);
+                nametxt.setText(name);
+            }
+        });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+
+//    @Override
+//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        // Restore UI state from the savedInstanceState.
+//        // This bundle has also been passed to onCreate.
+//
+//
+//        if (savedInstanceState != null) {
+//            Log.i("Main Activity 2:", savedInstanceState.toString());
+//            curr_fragment = savedInstanceState.getInt("frag", 0);
+//        }
+//
+//
+//    }
 }

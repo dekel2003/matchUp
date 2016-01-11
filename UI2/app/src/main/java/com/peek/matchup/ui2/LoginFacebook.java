@@ -98,46 +98,11 @@ public class LoginFacebook extends FragmentActivity {
             ParseUser.logOut();
             gotoLoginScreen();
         }
-        final AccessToken accessToken=AccessToken.getCurrentAccessToken();
-        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object, GraphResponse response) {
-                if (response.getError()!=null){
-                    Log.d("Main Activity: ", response.getError().getErrorMessage());
-                    AccessToken.refreshCurrentAccessTokenAsync();
-                    ParseLoginBuilder builder = new ParseLoginBuilder(LoginFacebook.this);
-                    startActivityForResult(builder.build(), RCODE);
-                    return;
-                }
-                Log.d("Main Activity: ", "connected with Token: " + accessToken.getToken());
-                String name=object.optString("name");
-                String id=object.optString("id");
-                Intent i=new Intent(LoginFacebook.this,MainActivity.class);
-                i.putExtra("name",name);
-                i.putExtra("id", id);
-                i.putExtra("birthday", object.optString("birthday"));
-                i.putExtra("gender", object.optString("gender"));
 
-
-                ParseInstallation pi = ParseInstallation.getCurrentInstallation();
-                pi.put("FacebookID", id);
-                pi.saveInBackground();
-
-                ParseUser pu = ParseUser.getCurrentUser();
-                pu.put("FacebookID",id);
-                pu.saveInBackground();
-
-                startActivity(i);
-                finish();
-            }
-        });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,birthday,gender");
-        request.setParameters(parameters);
-        request.executeAsync();
+        Intent i=new Intent(LoginFacebook.this,MainActivity.class);
+        startActivity(i);
+        finish();
     }
-
-
 
 
 }
