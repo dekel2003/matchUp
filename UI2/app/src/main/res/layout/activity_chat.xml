@@ -21,13 +21,11 @@
 
         <Button
             android:id="@+id/chatSendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:background="@color/background_floating_material_dark"
-            android:text="Send MSG"
-            android:textColor="@color/background_material_light"/>
+            android:background="@drawable/nevrweb"/>
 
         <ListView
             android:id="@+id/messagesContainer"
@@ -37,39 +35,10 @@
             android:layout_alignParentTop="false"
             android:layout_marginBottom="20dp"
             android:layout_above="@+id/messageEdit"
-            android:layout_below="@+id/meLbl"
             android:layout_marginTop="10dp"
             android:listSelector="@android:color/transparent"
             android:transcriptMode="alwaysScroll"
             android:divider="@null" />
-
-        <TextView
-            android:id="@+id/meLbl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left|center_vertical"
-            android:text="MySelf"
-            android:singleLine="false"
-            android:textSize="20dp" />
-
-        <TextView
-            android:id="@+id/friendLabel2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Friend"
-            android:textSize="20dp"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:id="@+id/friendLabel1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="Friend"
-            android:textSize="20dp" />
-
-
-
 
 
 

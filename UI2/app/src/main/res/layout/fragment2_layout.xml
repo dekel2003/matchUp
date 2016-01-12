@@ -30,6 +30,8 @@
 
 
             <Button
+                android:elevation="12dp"
+                android:stateListAnimator="@drawable/my_state_list_animator"
                 android:id="@+id/btnMatchNow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

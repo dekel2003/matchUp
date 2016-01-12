@@ -60,7 +60,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 //        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch, R.mipmap.chat};
 
         String[] tabNames = {"tab1", "tab2", "tab3"};
-        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch};
+        int[] icons = {R.mipmap.relationship, R.mipmap.connect, R.mipmap.appicon};
 
         for (int i = 0; i < tabNames.length; i++) {
             TabHost.TabSpec tabSpec;
@@ -77,10 +77,10 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 
         }
 
-        for (int i = 0; i < tabNames.length; i++) {
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height *= 1.7;
-            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width = 150;
-        }
+//        for (int i = 0; i < tabNames.length; i++) {
+////            tabHost.getTabWidget().getChildAt(i).getLayoutParams().height *= 1.7;
+////            tabHost.getTabWidget().getChildAt(i).getLayoutParams().width = 150;
+//        }
 
         tabHost.setOnTabChangedListener(this);
 
@@ -92,10 +92,10 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         fragment2 = new Fragment2();
         List<Fragment> listFragments = new ArrayList<Fragment>();
-        listFragments.add(new Fragment1());
-        listFragments.add(fragment2);
         listFragments.add(new Fragment3());
-        listFragments.add(new Fragment4());
+        listFragments.add(fragment2);
+        listFragments.add(new Fragment1());
+//        listFragments.add(new Fragment4());
         //listFragments.add(new Fragment5());
         //listFragments.add(new Fragment6());
         myFragmentPagerAdaper = new MyFragmentPagerAdaper(getChildFragmentManager(), listFragments);

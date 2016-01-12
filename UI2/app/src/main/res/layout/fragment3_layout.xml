@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent" >
+
 <TextView
     android:id="@+id/txt1"
     android:layout_width="wrap_content"
     android:layout_height="50dp"
     android:layout_alignParentRight="true"
     android:layout_alignParentEnd="true"
-    android:text="Yours Matches"
-    android:textSize="25dp"
+    android:text="Suggestions"
+    android:textSize="25sp"
     android:gravity="center"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" />
+    android:layout_alignParentStart="true"
+    android:textColor="#ff0000"
+    android:textStyle="bold" />
+
+    <android.support.v7.widget.CardView
+
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardCornerRadius="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:id="@+id/card_top"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/txt1"
+        card_view:cardBackgroundColor="#80f9c6c5"
+
+        >
+
     <GridView
 
 
@@ -25,18 +43,35 @@
     android:layout_below="@id/txt1"
     />
 
+    </android.support.v7.widget.CardView>
+
     <TextView
         android:id="@+id/txt2"
         android:layout_width="wrap_content"
-        android:layout_below="@id/gridView"
+
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="Yours Approved Matches"
+        android:text="Matches"
         android:textSize="25dp"
+        android:textColor="#ff0000"
         android:gravity="center"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/card_top"
+        android:textStyle="bold"
         android:layout_alignParentStart="true" />
+
+
+    <android.support.v7.widget.CardView
+
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt2"
+        card_view:cardBackgroundColor="#80f9c6c5"
+        >
+
     <GridView
 
         android:id="@+id/gridView2"
@@ -49,4 +84,5 @@
         android:layout_below="@+id/txt2"
         />
 
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

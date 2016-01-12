@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -79,6 +80,7 @@ public class ChatActivity extends ActionBarActivity {
         super.onResume();
         registerReceiver(mMessageReceiver, new IntentFilter("updateChat"));
         Log.i("Dekel Chat Register:", "registered");
+        loadHistory(id);
     }
 
     //Must unregister onPause()
@@ -172,8 +174,6 @@ public class ChatActivity extends ActionBarActivity {
         adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());
         messagesContainer.setAdapter(adapter);
 
-        TextView meLabel = (TextView) findViewById(R.id.meLbl);
-
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
 
@@ -195,7 +195,7 @@ public class ChatActivity extends ActionBarActivity {
 
 //        loadDummyHistory();
 
-        loadHistory(id);
+
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,8 +255,7 @@ public class ChatActivity extends ActionBarActivity {
 
     private void updateUserNameByParseID(final String match_id){
 
-        final TextView companionLabel1 = (TextView) findViewById(R.id.friendLabel1);
-        final TextView companionLabel2 = (TextView) findViewById(R.id.friendLabel2);
+
 
         ParseQuery<ParseUser> query_user = ParseUser.getQuery();
         query_user.whereEqualTo("objectId", match_id);
@@ -271,8 +270,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
                 name[0] = user.getString("name");
                 match_name = name[0];
-                companionLabel1.setText(id);
-                companionLabel2.setText(name[0]);
                 Log.d("Chat Activity: ", "Match name : " + name[0]);
             }
         });

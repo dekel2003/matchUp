@@ -3,6 +3,6 @@
     <item android:state_pressed="true" android:drawable="@drawable/activate"/>
     <item android:state_focused="true" android:drawable="@drawable/activate"/>
     <item android:state_activated="true" android:drawable="@drawable/activate"/>
-    <item  android:drawable="@drawable/unactivate"/>
+    <!--<item  android:drawable="@drawable/unactivate"/>-->
 
 </selector>

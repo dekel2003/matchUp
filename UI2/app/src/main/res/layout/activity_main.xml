@@ -6,7 +6,9 @@
 <RelativeLayout
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="match_parent"
+    android:background="@drawable/main_app_color"
+    />
 
 <RelativeLayout
     android:id="@+id/drawer_pane"
@@ -80,6 +82,6 @@
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="20dp"
-        android:background="@drawable/btn_white_glossy"/>
+        android:background="@drawable/nav_background"/>
 </RelativeLayout>
 </android.support.v4.widget.DrawerLayout >
