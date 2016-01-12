@@ -29,9 +29,10 @@ public class Receiver extends ParsePushBroadcastReceiver {
 
         try {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
+            Log.d("-Reciever", "raw JSONE object recieved: " + json.toString());
             Intent intentChatInformation = new Intent(json.getString("intention"));
             json = json.getJSONObject("value");
-            Log.d("Dekel", "JSONE object: " + json.toString());
+            Log.d("-Reciever", "JSONE object: " + json.toString());
 
             intentChatInformation.putExtra("message", json.toString());
 //            if (intentChatInformation.getAction().equals("updateChat")) {
@@ -46,10 +47,10 @@ public class Receiver extends ParsePushBroadcastReceiver {
 //            if (ChatActivity.active)
 
         } catch (JSONException e) {
-            Log.d("Dekel", "JSONException: " + e.getMessage());
+            Log.d("-Reciever", "JSONException: " + e.getMessage());
             e.printStackTrace();
         }
-        Log.i("Dekel", "Push Received");
-        Log.d("Dekel", "received " + intent.getAction());
+        Log.i("-Reciever", "Push Received");
+        Log.d("-Reciever", "received " + intent.getAction());
     }
 }

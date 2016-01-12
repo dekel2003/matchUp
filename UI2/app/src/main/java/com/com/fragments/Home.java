@@ -56,8 +56,12 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     private void initTabHost(Bundle savedInstanceState) {
         tabHost = (TabHost) v.findViewById(R.id.tabhost);
         tabHost.setup();
-        String[] tabNames = {"tab1", "tab2", "tab3", "tab4"};
-        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch, R.mipmap.chat};
+//        String[] tabNames = {"tab1", "tab2", "tab3", "tab4"};
+//        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch, R.mipmap.chat};
+
+        String[] tabNames = {"tab1", "tab2", "tab3"};
+        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch};
+
         for (int i = 0; i < tabNames.length; i++) {
             TabHost.TabSpec tabSpec;
             tabSpec = tabHost.newTabSpec(tabNames[i]);

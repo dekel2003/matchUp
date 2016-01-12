@@ -29,9 +29,14 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.widget.ProfilePictureView;
+import com.helperClasses.ParseErrorHandler;
 import com.models.NavIteam;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.ui.ParseLoginBuilder;
 
 import org.joda.time.LocalDate;
@@ -42,6 +47,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import java.util.List;
+
+import static com.helperClasses.parseHelpers.getUserIdByFacebookId;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -221,7 +228,12 @@ public class MainActivity extends ActionBarActivity {
 
                 ParseUser pu = ParseUser.getCurrentUser();
                 pu.put("FacebookID",id);
-                pu.saveInBackground();
+                pu.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        getUserIdByFacebookId(id, MainActivity.this.getBaseContext());
+                    }
+                });
 
                 ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
                 profilePictureView.setProfileId(id);
@@ -233,6 +245,8 @@ public class MainActivity extends ActionBarActivity {
         parameters.putString("fields", "id,name");
         request.setParameters(parameters);
         request.executeAsync();
+
+
     }
 
 

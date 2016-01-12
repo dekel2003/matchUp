@@ -17,31 +17,26 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.com.fragments.Setting;
 import com.google.gson.Gson;
-import com.helperClasses.SendNotifications;
 import com.paint.Paint_chat;
-import com.parse.FindCallback;
-import com.parse.Parse;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.peek.matchup.ui2.R;
 
-import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
+import static com.helperClasses.ParseErrorHandler.handleParseError;
 import static com.helperClasses.SendNotifications.SendJSONByParseId;
 
 
@@ -66,6 +61,9 @@ public class ChatActivity extends ActionBarActivity {
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
     private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.US);
+    private final String id = ParseUser.getCurrentUser().getObjectId();
+    private String match_name = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,16 +132,32 @@ public class ChatActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        int itemId = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (itemId == R.id.action_paint) {
+
+            Gson gson = new Gson();
+            JSONObject request = null;
+            try {
+//                JSONObject msgObj = new JSONObject(gson.toJson(chatMessage));
+                request = new JSONObject();
+                request.putOpt("value", "activate");
+                request.put("intention", "paint");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            final String id1 = getIntent().getStringExtra("id1");
+            final String id2 = getIntent().getStringExtra("id2");
+            final String match_id = (id.equals(id1)) ? id2 : id1;
+            SendJSONByParseId(match_id, request);
+
             Intent intent = new Intent(ChatActivity.this,Paint_chat.class);
             intent.putExtra("chatId",getIntent().getStringExtra("chatId"));
             intent.putExtra("id1",getIntent().getStringExtra("id1"));
             intent.putExtra("id2",getIntent().getStringExtra("id2"));
-            intent.putExtra("senderId",ParseUser.getCurrentUser().getObjectId());
-
+            intent.putExtra("senderId", ParseUser.getCurrentUser().getObjectId());
             startActivity(intent);
         }
 
@@ -159,8 +173,7 @@ public class ChatActivity extends ActionBarActivity {
         messagesContainer.setAdapter(adapter);
 
         TextView meLabel = (TextView) findViewById(R.id.meLbl);
-        TextView companionLabel1 = (TextView) findViewById(R.id.friendLabel1);
-        TextView companionLabel2 = (TextView) findViewById(R.id.friendLabel2);
+
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
 
@@ -172,15 +185,16 @@ public class ChatActivity extends ActionBarActivity {
         final String id1 = getIntent().getStringExtra("id1");
         final String id2 = getIntent().getStringExtra("id2");
 
+        final String match_id = (id.equals(id1)) ? id2 : id1;
+        updateUserNameByParseID(match_id);
 //          SendNotifications.notifyByParseId(id);
 
 //        meLabel.setText(getUserNameByParseID(id));
 
-        companionLabel1.setText(getUserNameByParseID(id1));
-        companionLabel2.setText(getUserNameByParseID(id2));
+
 
 //        loadDummyHistory();
-        final String id = ParseUser.getCurrentUser().getObjectId();
+
         loadHistory(id);
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -191,6 +205,7 @@ public class ChatActivity extends ActionBarActivity {
                     return;
                 }
                 ParseObject message = new ParseObject("ChatMessages");
+                message.put("type", "msg");
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setId(id);
                 message.put("senderId", id);
@@ -211,14 +226,16 @@ public class ChatActivity extends ActionBarActivity {
                     request = new JSONObject();
                     request.putOpt("value", msgObj);
                     request.put("intention", "updateChat");
+                    if (!match_name.equals(""))
+                        request.put("alert", "You got a new message from " + match_name);
+                    else
+                        request.put("alert", "You got a new message");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                if (id.equals(id2))
-                    SendJSONByParseId(id1, request);
-                else
-                    SendJSONByParseId(id2, request);
+
+                SendJSONByParseId(match_id, request);
 
                 displayMessage(chatMessage);
                 message.saveInBackground();
@@ -236,18 +253,32 @@ public class ChatActivity extends ActionBarActivity {
         scroll();
     }
 
-    static private String getUserNameByParseID(String id){
+    private void updateUserNameByParseID(final String match_id){
+
+        final TextView companionLabel1 = (TextView) findViewById(R.id.friendLabel1);
+        final TextView companionLabel2 = (TextView) findViewById(R.id.friendLabel2);
+
         ParseQuery<ParseUser> query_user = ParseUser.getQuery();
-        query_user.whereEqualTo("objectId", id);
-        String name = null;
-        try {
-            name = query_user.find().get(0).get("name").toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.d("Chat Activity: ", "Error load Name by id: " + id);
-        }
-        Log.d("Chat Activity: ", "Name0 : " + name);
-        return name;
+        query_user.whereEqualTo("objectId", match_id);
+        final String[] name = {null};
+        query_user.getFirstInBackground(new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null) {
+                    Log.d("Chat Activity: ", "Error load Name by id: " + match_id);
+                    e.printStackTrace();
+                    handleParseError(ChatActivity.this.getBaseContext(), e);
+                }
+                name[0] = user.getString("name");
+                match_name = name[0];
+                companionLabel1.setText(id);
+                companionLabel2.setText(name[0]);
+                Log.d("Chat Activity: ", "Match name : " + name[0]);
+            }
+        });
+
+
+
     }
 
     private void scroll() {

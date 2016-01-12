@@ -9,6 +9,7 @@
         android:layout_alignParentRight="true"
         android:orientation="vertical">
 
+        <!--for the date-->
         <TextView
             android:id="@+id/txtInfo"
             android:layout_width="wrap_content"
@@ -27,6 +28,7 @@
             android:paddingBottom="10dp"
             android:orientation="vertical">
 
+            <!--message content-->
             <TextView
                 android:id="@+id/txtMessage"
                 android:layout_width="wrap_content"

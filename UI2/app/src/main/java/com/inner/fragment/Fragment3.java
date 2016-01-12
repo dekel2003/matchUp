@@ -88,9 +88,9 @@ public class Fragment3 extends Fragment {
                 String facebook_id1 = Chats.get(position).getString("id1");
                 String facebook_id2 = Chats.get(position).getString("id2");
 
-                String matcher = getUserIdByFacebookId(facebook_matcher);
-                String id1 = getUserIdByFacebookId(facebook_id1);
-                String id2 = getUserIdByFacebookId(facebook_id2);
+                String matcher = getUserIdByFacebookId(facebook_matcher, getContext());
+                String id1 = getUserIdByFacebookId(facebook_id1, getContext());
+                String id2 = getUserIdByFacebookId(facebook_id2, getContext());
 
                 ParseQuery<ParseObject> existingChat = ParseQuery.getQuery("OpenChats");
                 existingChat.whereEqualTo("matcher", matcher).whereEqualTo("id1", id1).whereEqualTo("id2", id2);
@@ -124,6 +124,7 @@ public class Fragment3 extends Fragment {
                 Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
                 Bundle args = new Bundle();
                 args.putString("id", matcher);
+
                 args.putString("id1", id1);  //  the first User-Object_ID
                 args.putString("id2", id2);  //  the second User-Object_ID
                 args.putString("chatId", chatID); // unique chat-id for this specific conversation.

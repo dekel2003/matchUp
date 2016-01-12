@@ -5,30 +5,22 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.chat.ChatMessage;
 import com.google.gson.Gson;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.peek.matchup.ui2.R;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import static com.paint.MyTouchEventView.serialize;
 
 public class Paint_chat extends Activity {
 
@@ -39,6 +31,43 @@ public class Paint_chat extends Activity {
         super.onCreate(savedInstanceState);
        // setContentView(R.layout.paint_chat_layout);
         tv = new MyTouchEventView(this);
+
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat");
+        query.whereEqualTo("chatId",getIntent().getStringExtra("chatId")).orderByDescending("createdAt");
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (object != null) {
+                    ParseFile applicantResume = (ParseFile) object.get("applicantResumeFile");
+                    applicantResume.getDataInBackground(new GetDataCallback() {
+                        @Override
+                        public void done(byte[] data, ParseException e) {
+                            tv.path = ((SerPath) MyTouchEventView.deserialize(data));
+                            tv.invalidate();
+                        }
+                    });
+                } else {  //  image history is not exist in table
+                    byte[] data = serialize(tv.path);
+                    final ParseFile image_file = new ParseFile("myimg.jpeg", data);
+                    image_file.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            final ParseObject jobApplication = new ParseObject("imageChat");
+                            jobApplication.put("chatId", getIntent().getStringExtra("chatId"));
+                            jobApplication.put("senderId", getIntent().getStringExtra("senderId"));
+                            jobApplication.put("applicantResumeFile", image_file);
+                            try {
+                                jobApplication.save();
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+
         //ViewGroup layout = (ViewGroup) findViewById(R.id.mylayout);
         //tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         //layout.addView(tv);
@@ -63,13 +92,26 @@ public class Paint_chat extends Activity {
         super.onPause();
         unregisterReceiver(mMessageReceiver);
         Log.i("Dekel Image Register:", "unregistered");
+
+
+
+
+//        try {
+//            tv.getDrawnMessage();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         finish();
     }
+
 
     //This is the handler that will manager to process the broadcast intent
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+
+
             Log.i("Dekel Chat Recieve:", "start");
             // Extract data included in the Intent
             JSONObject json = null;
@@ -78,6 +120,12 @@ public class Paint_chat extends Activity {
 //                Date date = format.parse(json.getString("dateTime"));
 //                json.put("dateTime",date);
                 Log.i("Dekel Image Recieve: ", json.toString());
+                if (json.has("clear")){
+                    tv.path.reset();
+                    tv.invalidate();
+                    return;
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (NullPointerException e){
@@ -108,7 +156,12 @@ public class Paint_chat extends Activity {
                                 // data has the bytes for the resume
                               //  tv.bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                               //  tv.path.reset();
-                                tv.path=(SerPath) tv.deserialize(data);
+
+
+                                //     tmpPath.addPath((SerPath) MyTouchEventView.deserialize(data));
+                           //     tv.path = tmpPath;
+                                tv.path.addPath((SerPath) MyTouchEventView.deserialize(data));
+
                                 tv.invalidate();
 
                             } else {

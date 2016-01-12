@@ -47,6 +47,12 @@ public class SerPath extends Path implements Serializable {
         super.lineTo(x, y);
     }
 
+
+    public void addPath(SerPath src) {
+        actions.addAll(src.actions);
+        super.addPath(src);
+    }
+
     public void drawThisPath(){
         for(PathAction p : actions){
             if(p.getType().equals(PathAction.PathActionType.MOVE_TO)){
