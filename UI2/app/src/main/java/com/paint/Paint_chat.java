@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -20,6 +21,11 @@ import com.parse.SaveCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+import static com.paint.MyTouchEventView.deserialize;
 import static com.paint.MyTouchEventView.serialize;
 
 public class Paint_chat extends Activity {
@@ -32,41 +38,58 @@ public class Paint_chat extends Activity {
        // setContentView(R.layout.paint_chat_layout);
         tv = new MyTouchEventView(this);
 
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat");
-        query.whereEqualTo("chatId",getIntent().getStringExtra("chatId")).orderByDescending("createdAt");
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat")
+            .whereEqualTo("chatId", getIntent().getStringExtra("chatId"));
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(ParseObject object, ParseException e) {
-                if (object != null) {
-                    ParseFile applicantResume = (ParseFile) object.get("applicantResumeFile");
-                    applicantResume.getDataInBackground(new GetDataCallback() {
+            public void done(List<ParseObject> objects, ParseException e) {
+                for (ParseObject o : objects){
+                    ParseFile img = (ParseFile) o.get("applicantResumeFile");
+                    img.getDataInBackground(new GetDataCallback() {
                         @Override
                         public void done(byte[] data, ParseException e) {
-                            tv.path = ((SerPath) MyTouchEventView.deserialize(data));
+                            tv.path.addActions((LinkedHashSet<SerPath.PathAction>) deserialize(data));
                             tv.invalidate();
                         }
                     });
-                } else {  //  image history is not exist in table
-                    byte[] data = serialize(tv.path);
-                    final ParseFile image_file = new ParseFile("myimg.jpeg", data);
-                    image_file.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            final ParseObject jobApplication = new ParseObject("imageChat");
-                            jobApplication.put("chatId", getIntent().getStringExtra("chatId"));
-                            jobApplication.put("senderId", getIntent().getStringExtra("senderId"));
-                            jobApplication.put("applicantResumeFile", image_file);
-                            try {
-                                jobApplication.save();
-                            } catch (ParseException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-                    });
-
                 }
             }
         });
+
+
+//        query.getFirstInBackground(new GetCallback<ParseObject>() {
+//            @Override
+//            public void done(ParseObject object, ParseException e) {
+//                if (object != null) {
+//                    ParseFile applicantResume = (ParseFile) object.get("applicantResumeFile");
+//                    applicantResume.getDataInBackground(new GetDataCallback() {
+//                        @Override
+//                        public void done(byte[] data, ParseException e) {
+//                            tv.path = ((SerPath) MyTouchEventView.deserialize(data));
+//                            tv.invalidate();
+//                        }
+//                    });
+//                } else {  //  image history is not exist in table
+//                    byte[] data = serialize(tv.path);
+//                    final ParseFile image_file = new ParseFile("myimg.jpeg", data);
+//                    image_file.saveInBackground(new SaveCallback() {
+//                        @Override
+//                        public void done(ParseException e) {
+//                            final ParseObject jobApplication = new ParseObject("imageChat");
+//                            jobApplication.put("chatId", getIntent().getStringExtra("chatId"));
+//                            jobApplication.put("senderId", getIntent().getStringExtra("senderId"));
+//                            jobApplication.put("applicantResumeFile", image_file);
+//                            try {
+//                                jobApplication.save();
+//                            } catch (ParseException e1) {
+//                                e1.printStackTrace();
+//                            }
+//                        }
+//                    });
+//
+//                }
+//            }
+//        });
 
         //ViewGroup layout = (ViewGroup) findViewById(R.id.mylayout);
         //tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -110,8 +133,6 @@ public class Paint_chat extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-
-
             Log.i("Dekel Chat Recieve:", "start");
             // Extract data included in the Intent
             JSONObject json = null;
@@ -123,6 +144,11 @@ public class Paint_chat extends Activity {
                 if (json.has("clear")){
                     tv.path.reset();
                     tv.invalidate();
+                    try {
+                        tv.getDrawnMessage(false);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     return;
                 }
 
@@ -160,7 +186,7 @@ public class Paint_chat extends Activity {
 
                                 //     tmpPath.addPath((SerPath) MyTouchEventView.deserialize(data));
                            //     tv.path = tmpPath;
-                                tv.path.addPath((SerPath) MyTouchEventView.deserialize(data));
+                                tv.path.addActions((LinkedHashSet<SerPath.PathAction>) deserialize(data));
 
                                 tv.invalidate();
 

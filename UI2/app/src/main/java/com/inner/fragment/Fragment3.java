@@ -102,7 +102,6 @@ public class Fragment3 extends Fragment {
                     e.printStackTrace();
                 }
 
-                assert foundExistingChat != null;
                 String chatID;
                 if (!foundExistingChat.isEmpty()){
                     chatID = foundExistingChat.get(0).getObjectId();
@@ -128,6 +127,12 @@ public class Fragment3 extends Fragment {
                 args.putString("id1", id1);  //  the first User-Object_ID
                 args.putString("id2", id2);  //  the second User-Object_ID
                 args.putString("chatId", chatID); // unique chat-id for this specific conversation.
+
+                args.putString("help1", Chats.get(position).getString("help1"));
+                args.putString("help2", Chats.get(position).getString("help2"));
+                args.putString("help3", Chats.get(position).getString("help3"));
+
+
                 intent.putExtras(args);
                 startActivity(intent);
 

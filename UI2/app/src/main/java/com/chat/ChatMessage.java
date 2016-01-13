@@ -13,6 +13,7 @@ public class ChatMessage {
     private String message;
     private Long userId;
     private String dateTime;
+    private String specialType;
 
     public String getId() {
         return id;
@@ -52,5 +53,13 @@ public class ChatMessage {
 
     public void setDate(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getSpecialType() {
+        return specialType;
+    }
+
+    public void setSpecialType(String specialType) {
+        this.specialType = specialType;
     }
 }

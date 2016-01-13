@@ -251,8 +251,40 @@ public class ChatActivity extends ActionBarActivity {
         adapter.add(message);
         adapter.notifyDataSetChanged();
         scroll();
-        if (adapter.getCount() == 5){
-
+        if (adapter.getCount()%5==0){
+            if (adapter.getCount()==5){
+                String help1 = getIntent().getStringExtra("help1");
+                if (help1==null || help1.length()<1)
+                    return;
+                ChatMessage helpMessage = new ChatMessage();
+                helpMessage.setSpecialType("MatcherMsg");
+                helpMessage.setMessage(help1);
+                adapter.add(helpMessage);
+                adapter.notifyDataSetChanged();
+                scroll();
+            }
+            if (adapter.getCount()==10){
+                String help1 = getIntent().getStringExtra("help2");
+                if (help1==null || help1.length()<1)
+                    return;
+                ChatMessage helpMessage = new ChatMessage();
+                helpMessage.setSpecialType("MatcherMsg");
+                helpMessage.setMessage(help1);
+                adapter.add(helpMessage);
+                adapter.notifyDataSetChanged();
+                scroll();
+            }
+            if (adapter.getCount()==15){
+                String help1 = getIntent().getStringExtra("help3");
+                if (help1==null || help1.length()<1)
+                    return;
+                ChatMessage helpMessage = new ChatMessage();
+                helpMessage.setSpecialType("MatcherMsg");
+                helpMessage.setMessage(help1);
+                adapter.add(helpMessage);
+                adapter.notifyDataSetChanged();
+                scroll();
+            }
         }
     }
 

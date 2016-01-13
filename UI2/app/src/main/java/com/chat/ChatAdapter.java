@@ -67,11 +67,17 @@ public class ChatAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        boolean myMsg = chatMessage.getIsme() ;//Just a dummy check to simulate whether it me or other sender
-        setAlignment(holder, myMsg);
-        holder.txtMessage.setText(chatMessage.getMessage());
-        holder.txtInfo.setText(chatMessage.getDate());
-        holder.txtInfo.setVisibility(View.GONE);
+
+        String specialType = chatMessage.getSpecialType();
+        if (specialType==null || specialType.equals("")) {
+            boolean myMsg = chatMessage.getIsme();//Just a dummy check to simulate whether it me or other sender
+            setAlignment(holder, myMsg);
+            holder.txtMessage.setText(chatMessage.getMessage());
+            holder.txtInfo.setText(chatMessage.getDate());
+            holder.txtInfo.setVisibility(View.GONE);
+        } else {
+            setSpecialTypeAlignment(holder, chatMessage);
+        }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +90,34 @@ public class ChatAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+
+    private void setSpecialTypeAlignment(ViewHolder holder, ChatMessage msg) {
+        String specialType = msg.getSpecialType();
+        if (specialType.equals("MatcherMsg")) {
+            holder.contentWithBG.setBackgroundResource(R.drawable.btn_yellowgreen_glossy);
+
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+
+//            layoutParams.setLayoutDirection(RelativeLayout.CENTER_HORIZONTAL);
+            holder.contentWithBG.setLayoutParams(layoutParams);
+
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
+//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+            holder.content.setLayoutParams(lp);
+            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
+            layoutParams.gravity = Gravity.CENTER;
+            holder.txtMessage.setLayoutParams(layoutParams);
+            holder.txtMessage.setText(msg.getMessage());
+//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
+//            layoutParams.gravity = Gravity.CENTER;
+//            holder.txtInfo.setLayoutParams(layoutParams);
+        }
     }
 
     public void add(ChatMessage message) {

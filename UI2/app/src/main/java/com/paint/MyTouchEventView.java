@@ -186,7 +186,11 @@ public class MyTouchEventView extends View {
         // super.onLayout(changed, left, top, right, bottom);
     }
 
-    public void getDrawnMessage() throws FileNotFoundException {
+    public void getDrawnMessage() throws FileNotFoundException{
+        getDrawnMessage(true);
+    }
+
+    public void getDrawnMessage(final boolean sendPush) throws FileNotFoundException {
         //parentLinearLayout.setVisibility(View.INVISIBLE);
         //Bitmap bitmap;
         //View v = getRootView();
@@ -200,122 +204,104 @@ public class MyTouchEventView extends View {
         //bitmap = Bitmap.createBitmap(v.getDrawingCache());
         //bitmap = Bitmap.createBitmap(bitmap, 0, 20, bitmap.getWidth(), bitmap.getHeight()-20);
         //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
         //bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-//
-//        //byte[] data = stream.toByteArray();
-//        final byte[] data = serialize(path);
-//        final Intent MyIntent = ((Activity) getContext()).getIntent();
-//        final String chatId = MyIntent.getStringExtra("chatId");
-//        final String senderId = MyIntent.getStringExtra("senderId");
-//        final String id1 = MyIntent.getStringExtra("id1");
-//        final String id2 = MyIntent.getStringExtra("id2");
-//
-//
-//        final ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat");
-//        query.whereEqualTo("senderId", senderId).whereEqualTo("chatId", chatId);
-//        query.getFirstInBackground(new GetCallback<ParseObject>() {
-//            @Override
-//            public void done(final ParseObject object, ParseException e) {
-//                if (object != null) {
-//                    final ParseObject object2 = new ParseObject("imageChat");
-//                    ParseFile applicantResume = (ParseFile) object.get("applicantResumeFile");
-//                    try {
-//                        byte[] data2 = applicantResume.getData();
-//                        path.addPath((Path) deserialize(data2));
-//                        invalidate();
-//                    } catch (ParseException e1) {
-//                        e1.printStackTrace();
-//                    }
-//                    final byte[] data = serialize(path);
-//
-//                    final ParseFile image_file = new ParseFile("myimg.jpeg", data);
-//                    object2.put("applicantResumeFile", image_file);
-//
-//                    image_file.saveInBackground(new SaveCallback() {
-//                        @Override
-//                        public void done(ParseException e) {
-//                            object2.saveInBackground(new SaveCallback() {
-//                                @Override
-//                                public void done(ParseException e) {
-//                                    PaintIdMessage paintIdMessaget = new PaintIdMessage();
-//                                    String imgId = object2.getObjectId();
-//                                    paintIdMessaget.setId(imgId);
-//                                    Gson gson = new Gson();
-//                                    JSONObject request = null;
-//                                    try {
-//                                        JSONObject msgObj = new JSONObject(gson.toJson(paintIdMessaget));
-//                                        request = new JSONObject();
-//                                        request.putOpt("value", msgObj);
-//                                        request.put("intention", "updateImage");
-//                                    } catch (JSONException ee) {
-//                                        ee.printStackTrace();
-//                                    }
-//
-//                                    Log.i("Paint:", "update request: " + request.toString());
-//
-//                                    if (senderId.equals(id2))
-//                                        SendJSONByParseId(id1, request);
-//                                    else
-//                                        SendJSONByParseId(id2, request);
-//                                }
-//                            });
-//                        }
-//                    });
-//                } else { // Image is not exist in DB??
-//
-//                }
-//            }
-//        });
 
 
         //byte[] data = stream.toByteArray();
-        byte[] data = serialize(path);
-        final ParseFile image_file = new ParseFile("myimg.jpeg", data);
+
+        byte[] data = serialize(path.actions);
+        final ParseFile image_file = new ParseFile("myimg", data);
         image_file.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                final ParseObject jobApplication = new ParseObject("imageChat");
-
                 Intent MyIntent = ((Activity) getContext()).getIntent();
-                String chatId = MyIntent.getStringExtra("chatId");
+                final String chatId = MyIntent.getStringExtra("chatId");
                 final String senderId = MyIntent.getStringExtra("senderId");
                 final String id1 = MyIntent.getStringExtra("id1");
                 final String id2 = MyIntent.getStringExtra("id2");
-
-                jobApplication.put("chatId", chatId);
-                jobApplication.put("senderId", senderId);
-
-                jobApplication.put("applicantResumeFile", image_file);
-
-                jobApplication.saveInBackground(new SaveCallback() {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat")
+                        .whereEqualTo("chatId", chatId)
+                        .whereEqualTo("senderId", senderId);
+                query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
-                    public void done(ParseException e) {
-                        PaintIdMessage paintIdMessaget = new PaintIdMessage();
-                        String imgId = jobApplication.getObjectId();
-                        paintIdMessaget.setId(imgId);
-                        Gson gson = new Gson();
-                        JSONObject request = null;
-                        try {
-                            JSONObject msgObj = new JSONObject(gson.toJson(paintIdMessaget));
-                            request = new JSONObject();
-                            request.putOpt("value", msgObj);
-                            request.put("intention", "updateImage");
-                        } catch (JSONException ee) {
-                            ee.printStackTrace();
-                        }
+                    public void done(ParseObject object, ParseException e) {
+                        if (object==null)
+                            object = new ParseObject("imageChat");
+                        object.put("chatId", chatId);
+                        object.put("senderId", senderId);
+                        object.put("applicantResumeFile", image_file);
+                        final ParseObject finalObject = object;
+                        object.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (!sendPush)
+                                    return;
+                                PaintIdMessage paintIdMessaget = new PaintIdMessage();
+                                String imgId = finalObject.getObjectId();
+                                paintIdMessaget.setId(imgId);
+                                Gson gson = new Gson();
+                                JSONObject request = null;
+                                try {
+                                    JSONObject msgObj = new JSONObject(gson.toJson(paintIdMessaget));
+                                    request = new JSONObject();
+                                    request.putOpt("value", msgObj);
+                                    request.put("intention", "updateImage");
+                                } catch (JSONException ee) {
+                                    ee.printStackTrace();
+                                }
 
-                        Log.i("Paint:", request.toString());
+                                Log.i("Paint:", request.toString());
 
-                        if (senderId.equals(id2))
-                            SendJSONByParseId(id1, request);
-                        else
-                            SendJSONByParseId(id2, request);
+                                if (senderId.equals(id2))
+                                    SendJSONByParseId(id1, request);
+                                else
+                                    SendJSONByParseId(id2, request);
+                            }
+                        });
                     }
                 });
+                invalidate();
+//
+//                final ParseObject jobApplication = new ParseObject("imageChat");
+//
+//                jobApplication.put("chatId", chatId);
+//                jobApplication.put("senderId", senderId);
+//
+//                jobApplication.put("applicantResumeFile", image_file);
+//
+//                jobApplication.saveInBackground(new SaveCallback() {
+//                    @Override
+//                    public void done(ParseException e) {
+//                        PaintIdMessage paintIdMessaget = new PaintIdMessage();
+//                        String imgId = jobApplication.getObjectId();
+//                        paintIdMessaget.setId(imgId);
+//                        Gson gson = new Gson();
+//                        JSONObject request = null;
+//                        try {
+//                            JSONObject msgObj = new JSONObject(gson.toJson(paintIdMessaget));
+//                            request = new JSONObject();
+//                            request.putOpt("value", msgObj);
+//                            request.put("intention", "updateImage");
+//                        } catch (JSONException ee) {
+//                            ee.printStackTrace();
+//                        }
+//
+//                        Log.i("Paint:", request.toString());
+//
+//                        if (senderId.equals(id2))
+//                            SendJSONByParseId(id1, request);
+//                        else
+//                            SendJSONByParseId(id2, request);
+//                    }
+//                });
+//            }
+//        });
+//
+//        invalidate();
+
             }
         });
-
-        invalidate();
     }
 
     //for (int i = 0; i < 10; ++i) for (int j = 0; j < 10; ++j)

@@ -1,11 +1,16 @@
 package com.paint;
 
 import android.graphics.Path;
+import android.util.ArraySet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created
@@ -23,7 +28,8 @@ public class SerPath extends Path implements Serializable {
 
     private static final long serialVersionUID = -5974912367682897467L;
 
-    private ArrayList<PathAction> actions = new ArrayList<SerPath.PathAction>();
+//    private ArrayList<PathAction> actions = new ArrayList<SerPath.PathAction>();
+    protected Set<PathAction> actions = new LinkedHashSet<>();
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
         in.defaultReadObject();
@@ -48,6 +54,11 @@ public class SerPath extends Path implements Serializable {
     }
 
 
+    public void addActions(Set<PathAction> src) {
+        drawOnThisPath(src);
+        actions.addAll(src);
+    }
+
     public void addPath(SerPath src) {
         actions.addAll(src.actions);
         super.addPath(src);
@@ -55,6 +66,15 @@ public class SerPath extends Path implements Serializable {
 
     public void drawThisPath(){
         for(PathAction p : actions){
+            if(p.getType().equals(PathAction.PathActionType.MOVE_TO)){
+                super.moveTo(p.getX(), p.getY());
+            } else if(p.getType().equals(PathAction.PathActionType.LINE_TO)){
+                super.lineTo(p.getX(), p.getY());
+            }
+        }
+    }
+    public void drawOnThisPath(Set<PathAction> src){
+        for(PathAction p : src){
             if(p.getType().equals(PathAction.PathActionType.MOVE_TO)){
                 super.moveTo(p.getX(), p.getY());
             } else if(p.getType().equals(PathAction.PathActionType.LINE_TO)){
