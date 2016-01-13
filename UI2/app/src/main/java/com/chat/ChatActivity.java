@@ -79,6 +79,7 @@ public class ChatActivity extends ActionBarActivity {
     public void onResume() {
         super.onResume();
         registerReceiver(mMessageReceiver, new IntentFilter("updateChat"));
+
         Log.i("Dekel Chat Register:", "registered");
         loadHistory(id);
     }
@@ -210,6 +211,7 @@ public class ChatActivity extends ActionBarActivity {
                 chatMessage.setId(id);
                 message.put("senderId", id);
                 String chatId = getIntent().getStringExtra("chatId");
+                chatMessage.setchatId(chatId);
                 message.put("chatId", chatId);
                 chatMessage.setMessage(messageText);
                 message.put("content", messageText);
@@ -335,14 +337,16 @@ public class ChatActivity extends ActionBarActivity {
         if (messages == null)
             return;
         for (ParseObject message : messages) {
-            ChatMessage msg = new ChatMessage();
-            msg.setId(message.getString("senderId"));
-            msg.setMe(true);
-            if (!msg.getId().equals(id))
-                msg.setMe(false);
-            msg.setDate(format.format(message.getDate("date")));
-            msg.setMessage(message.getString("content"));
-            displayMessage(msg);
+            if (message.has("type") && message.getString("type").equals("msg")) {
+                ChatMessage msg = new ChatMessage();
+                msg.setId(message.getString("senderId"));
+                msg.setMe(true);
+                if (!msg.getId().equals(id))
+                    msg.setMe(false);
+                msg.setDate(format.format(message.getDate("date")));
+                msg.setMessage(message.getString("content"));
+                displayMessage(msg);
+            }
         }
     }
 

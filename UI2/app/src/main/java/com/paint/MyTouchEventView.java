@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.chat.ChatMessage;
 import com.google.gson.Gson;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -49,17 +50,16 @@ public class MyTouchEventView extends View {
     //private Paint circlePaint = new Paint();
     //private Path circlePath = new Path();
 
-    public Button btnReset, btnSave, btnGotoSaved;
-    public ViewGroup.LayoutParams params;
+
+//    public ViewGroup.LayoutParams params;
     public Bitmap bitmap;
 
-    LinearLayout parentLinearLayout;
+
 
     public MyTouchEventView(Context context) {
         super(context);
 
         bitmap = null;
-        params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         paint.setAntiAlias(true);
         paint.setColor(Color.BLACK);
@@ -67,75 +67,6 @@ public class MyTouchEventView extends View {
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(10f);
 
-        //circlePaint.setAntiAlias(true);
-        // circlePaint.setColor(Color.BLUE);
-        // circlePaint.setStyle(Paint.Style.STROKE);
-        //  circlePaint.setStrokeJoin(Paint.Join.MITER);
-        //  circlePaint.setStrokeWidth(4f);
-
-        parentLinearLayout = new LinearLayout(context);
-
-        btnReset = new Button(context);
-        btnReset.setText("Clear Screen");
-        btnSave = new Button(context);
-        btnSave.setText("Save Screen");
-        btnGotoSaved = new Button(context);
-        btnGotoSaved.setText("View Save");
-        parentLinearLayout.addView(btnReset);
-        //parentLinearLayout.addView(btnSave);
-        //parentLinearLayout.addView(btnGotoSaved);
-        btnReset.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Gson gson = new Gson();
-                JSONObject request = null;
-                try {
-                    JSONObject msgObj = new JSONObject();
-                    msgObj.put("clear", true);
-                    request = new JSONObject();
-                    request.putOpt("value", msgObj);
-                    request.put("intention", "updateImage");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Intent MyIntent = ((Activity) getContext()).getIntent();
-                final String senderId = MyIntent.getStringExtra("senderId");
-                final String id1 = MyIntent.getStringExtra("id1");
-                final String id2 = MyIntent.getStringExtra("id2");
-                if (senderId.equals(id2))
-                    SendJSONByParseId(id1, request);
-                else
-                    SendJSONByParseId(id2, request);
-
-
-                path.reset();
-                try {
-                    getDrawnMessage();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                postInvalidate();
-            }
-        });
-        btnSave.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    getDrawnMessage();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        btnGotoSaved.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getContext(), ViewSavedActivity.class);
-                getContext().startActivity(myIntent);
-            }
-        });
     }
 
     @Override
@@ -147,6 +78,26 @@ public class MyTouchEventView extends View {
         }
         canvas.drawPath(path, paint);
         //canvas.drawPath(circlePath, circlePaint);
+    }
+
+    protected Bitmap createBitmap(){
+        Bitmap bitmap;
+
+        View parentLinearLayout = this;
+
+        parentLinearLayout.setDrawingCacheEnabled(true);
+//        layout(0, 0, 100, 100);
+        parentLinearLayout.buildDrawingCache();
+        Toast.makeText(getContext(), "Saving Image to chat", Toast.LENGTH_SHORT).show();
+//        String root = Environment.getExternalStorageDirectory().toString();
+//            File imgDir = new File(root+"/MatchUp/");
+//            String imgName;
+        bitmap = Bitmap.createBitmap(parentLinearLayout.getDrawingCache());
+        bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight());
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+        return bitmap;
     }
 
     @Override
@@ -186,7 +137,7 @@ public class MyTouchEventView extends View {
         // super.onLayout(changed, left, top, right, bottom);
     }
 
-    public void getDrawnMessage() throws FileNotFoundException{
+    public void getDrawnMessage() throws FileNotFoundException {
         getDrawnMessage(true);
     }
 
@@ -226,7 +177,7 @@ public class MyTouchEventView extends View {
                 query.getFirstInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        if (object==null)
+                        if (object == null)
                             object = new ParseObject("imageChat");
                         object.put("chatId", chatId);
                         object.put("senderId", senderId);

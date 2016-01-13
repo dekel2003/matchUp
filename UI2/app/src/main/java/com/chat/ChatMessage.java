@@ -11,7 +11,7 @@ public class ChatMessage {
     private String id;
     private boolean isMe;
     private String message;
-    private Long userId;
+    private String chatId;
     private String dateTime;
     private String specialType;
 
@@ -39,12 +39,12 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public long getUserId() {
-        return userId;
+    public String getchatId() {
+        return chatId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setchatId(String chatId) {
+        this.chatId = chatId;
     }
 
     public String getDate() {
