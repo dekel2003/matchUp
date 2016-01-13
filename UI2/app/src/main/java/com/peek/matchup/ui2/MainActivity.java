@@ -152,6 +152,8 @@ public class MainActivity extends ActionBarActivity {
         };
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
+
+
     }
 
     @Override
