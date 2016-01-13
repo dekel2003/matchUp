@@ -36,9 +36,6 @@ public class Fragment4 extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-
         return v;
     }
 }

@@ -251,6 +251,9 @@ public class ChatActivity extends ActionBarActivity {
         adapter.add(message);
         adapter.notifyDataSetChanged();
         scroll();
+        if (adapter.getCount() == 5){
+
+        }
     }
 
     private void updateUserNameByParseID(final String match_id){
