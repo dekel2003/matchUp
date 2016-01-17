@@ -72,6 +72,23 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.dopen, R.string.dclose)
+        {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+            invalidateOptionsMenu();
+            super.onDrawerOpened(drawerView);
+        }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+            invalidateOptionsMenu();
+            super.onDrawerClosed(drawerView);
+        }
+        };
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         loadUserDetails();
 
@@ -87,6 +104,9 @@ public class MainActivity extends ActionBarActivity {
 //        Log.d("MainActivity: gender",gender);
 //        ((TextView) findViewById(R.id.gender)).setText(gender);
 
+    }
+
+    private void loadActivityComponents(){
 
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
@@ -94,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
         if (mPhoneNumber != null)
             Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
         listView = (ListView) findViewById(R.id.nav_list);
 
@@ -116,6 +136,10 @@ public class MainActivity extends ActionBarActivity {
         fragmentList.add(new Setting());
         fragmentList.add(new Out());
 
+        Bundle args = new Bundle();
+        args.putString("name", name);
+        fragmentList.get(0).setArguments(args);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_content, fragmentList.get(0)).commit();
 
@@ -127,6 +151,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
+                Bundle args = new Bundle();
+                args.putString("name", name);
+                fragmentList.get(position).setArguments(args);
                 fragmentManager.beginTransaction().replace(R.id.main_content, fragmentList.get(position)).commit();
 
                 setTitle(navIteamList.get(position).getTitle());
@@ -135,24 +162,6 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
-
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.dopen, R.string.dclose)
-        {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu();
-                super.onDrawerOpened(drawerView);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                invalidateOptionsMenu();
-                super.onDrawerClosed(drawerView);
-            }
-        };
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
-
-
 
     }
 
@@ -237,6 +246,8 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
 
+                loadActivityComponents();
+
                 ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
                 profilePictureView.setProfileId(id);
                 TextView nametxt=(TextView) findViewById(R.id.nametxt);
@@ -247,6 +258,7 @@ public class MainActivity extends ActionBarActivity {
         parameters.putString("fields", "id,name");
         request.setParameters(parameters);
         request.executeAsync();
+
 
 
     }

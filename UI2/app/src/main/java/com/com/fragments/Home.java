@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 
     int curr_fragment = 1;
 
+    private String user_name;
 
     @Nullable
     @Override
@@ -45,9 +47,12 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 
         v = inflater.inflate(R.layout.tabs_view_pager_layout, container, false);
 
+        user_name = getArguments().getString("name");
+        Log.i("Fragment Home:", "username is-" + user_name);
         i++;
         initVeiwPager();
         initTabHost(savedInstanceState);
+
 
 
         return v;
@@ -95,6 +100,13 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         listFragments.add(new Fragment3());
         listFragments.add(fragment2);
         listFragments.add(new Fragment1());
+
+        Bundle args = new Bundle();
+        args.putString("user_name", user_name);
+        for (Fragment f : listFragments){
+            f.setArguments(args);
+        }
+
 //        listFragments.add(new Fragment4());
         //listFragments.add(new Fragment5());
         //listFragments.add(new Fragment6());

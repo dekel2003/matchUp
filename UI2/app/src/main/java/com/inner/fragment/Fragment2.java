@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,8 @@ public class Fragment2 extends Fragment {
     private String name2 = "";
     private Button btn;
 
+    private String user_name;
+
 
     @Nullable
     @Override
@@ -56,6 +59,10 @@ public class Fragment2 extends Fragment {
         View v = inflater.inflate(R.layout.fragment2_layout, container, false);
         final Fragment f = this;
         final FragmentManager fragManager = myContext.getSupportFragmentManager();
+
+        user_name = getArguments().getString("user_name");
+        Log.i("Fragment 2:", "username is-" + user_name);
+
         editText1 = (EditText) v.findViewById(R.id.editText1);
         editText2 = (EditText) v.findViewById(R.id.editText2);
 //        editText1.setText("");
@@ -150,6 +157,7 @@ public class Fragment2 extends Fragment {
                 args.putString("id2",id2);
                 args.putString("name1",name1);
                 args.putString("name2",name2);
+                args.putString("user_name",user_name);
                 dialog.setArguments(args);
                 dialog.setTargetFragment(f, DATEPICKER_FRAGMENT3);
                 // Show DialogFragment

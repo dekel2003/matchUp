@@ -107,7 +107,7 @@ public class ConfirmMatch extends DialogFragment {
 
                 String id = AccessToken.getCurrentAccessToken().getUserId();
                 addMatch.put("matcher", id);
-//                addMatch.put("matcherName", name);
+                addMatch.put("matcherName", args.getString("user_name"));
                 addMatch.put("approve1", "0");
                 addMatch.put("approve2", "0");
 
