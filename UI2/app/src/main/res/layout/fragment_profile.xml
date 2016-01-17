@@ -1,94 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:id="@+id/settingsLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:divider="@android:color/transparent"
     android:dividerHeight="30dp"
-    android:layout_width="match_parent" android:layout_height="match_parent"
     android:dividerPadding="30dp"
+    android:orientation="vertical"
     android:weightSum="1">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
     <com.facebook.login.widget.ProfilePictureView
+        android:id="@+id/ppic"
         android:layout_width="230dp"
         android:layout_height="230dp"
-        android:id="@+id/ppic"
-        android:layout_margin="10dp"></com.facebook.login.widget.ProfilePictureView>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/ppic"
-    android:layout_alignParentRight="true"
-    android:layout_alignParentEnd="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:id="@+id/linearLayout">
-    <ImageView
-    android:id="@+id/image1"
-    android:layout_width="110dp"
-    android:layout_height="110dp"
-        android:src="@mipmap/pictmp"
-        android:layout_alignTop="@+id/image2"
-        android:layout_toLeftOf="@+id/image2"
-        android:layout_margin="6dp"
-        android:layout_toStartOf="@+id/image2" />
-    <ImageView
-    android:id="@+id/image2"
-    android:layout_width="110dp"
-    android:layout_height="110dp"
-        android:src="@mipmap/pictmp"
-        android:layout_margin="6dp"
-        android:layout_alignRight="@+id/ppic"
-        android:layout_alignEnd="@+id/ppic" />
-    <ImageView
-        android:id="@+id/image3"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_margin="6dp"
-        android:layout_toRightOf="@+id/image2"
-        android:src="@mipmap/pictmp" />
-</LinearLayout>
+        android:layout_margin="10dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ppic">
+
+        <ImageView
+            android:id="@+id/image1"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_alignTop="@+id/image2"
+            android:layout_margin="6dp"
+            android:layout_toLeftOf="@+id/image2"
+            android:layout_toStartOf="@+id/image2"
+            android:src="@mipmap/pictmp" />
+
+        <ImageView
+            android:id="@+id/image2"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_alignEnd="@+id/ppic"
+            android:layout_alignRight="@+id/ppic"
+            android:layout_margin="6dp"
+            android:src="@mipmap/pictmp" />
+
+        <ImageView
+            android:id="@+id/image3"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_margin="6dp"
+            android:layout_toRightOf="@+id/image2"
+            android:src="@mipmap/pictmp" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/image4"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:src="@mipmap/pictmp"
         android:layout_alignBottom="@+id/ppic"
+        android:layout_toEndOf="@+id/ppic"
         android:layout_toRightOf="@+id/ppic"
-        android:layout_toEndOf="@+id/ppic" />
+        android:src="@mipmap/pictmp" />
 
 
     <ImageView
         android:id="@+id/image5"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:src="@mipmap/pictmp"
-
-
         android:layout_alignTop="@+id/ppic"
+
+
+        android:layout_toEndOf="@+id/ppic"
         android:layout_toRightOf="@+id/ppic"
-        android:layout_toEndOf="@+id/ppic" />
+        android:src="@mipmap/pictmp" />
 
 
     <EditText
+        android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:hint="about me.."
-        android:layout_below="@+id/linearLayout"
+        android:layout_alignEnd="@+id/image4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/image4"
-        android:layout_alignEnd="@+id/image4" />
+        android:layout_below="@+id/linearLayout"
 
+        android:layout_marginBottom="100dp"
+        android:hint="about me.." />
+
+        </RelativeLayout>
+    </ScrollView>
     <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Changes"
-        android:id="@+id/button"
-
         android:layout_alignParentBottom="true"
+
+        android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true"
+        android:text="Save Changes" />
 
 </RelativeLayout>

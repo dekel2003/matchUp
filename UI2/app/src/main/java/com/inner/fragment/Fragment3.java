@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +14,11 @@ import android.widget.GridView;
 
 import com.chat.ChatActivity;
 import com.com.adapters.NavAdapterFacebook;
-import com.com.fragments.MatchDetailes;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.models.NavItemFacebook;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -38,9 +34,6 @@ import java.util.List;
 import static com.helperClasses.parseHelpers.getUserIdByFacebookId;
 
 
-/**
- * Created by User on 05/12/2015.
- */
 public class Fragment3 extends Fragment {
 
     GridView gridView;
@@ -48,6 +41,8 @@ public class Fragment3 extends Fragment {
     List<NavItemFacebook> ListFacebook;
     List<NavItemFacebook> ListFacebook2;
     List<ParseObject> Chats;
+    String userId = AccessToken.getCurrentAccessToken().getUserId();
+
 
 
     NavAdapterFacebook navAdapterFacebook;
@@ -89,8 +84,17 @@ public class Fragment3 extends Fragment {
                 String facebook_id2 = Chats.get(position).getString("id2");
 
                 String matcher = getUserIdByFacebookId(facebook_matcher, getContext());
-                String id1 = getUserIdByFacebookId(facebook_id1, getContext());
-                String id2 = getUserIdByFacebookId(facebook_id2, getContext());
+
+                String id1,id2;
+                if (facebook_id1.equals(id))
+                    id1 = ParseUser.getCurrentUser().getObjectId();
+                else
+                    id1 = getUserIdByFacebookId(facebook_id1, getContext());
+
+                if (facebook_id2.equals(id))
+                    id2 = ParseUser.getCurrentUser().getObjectId();
+                else
+                    id2 = getUserIdByFacebookId(facebook_id2, getContext());
 
                 ParseQuery<ParseObject> existingChat = ParseQuery.getQuery("OpenChats");
                 existingChat.whereEqualTo("matcher", matcher).whereEqualTo("id1", id1).whereEqualTo("id2", id2);
@@ -140,7 +144,7 @@ public class Fragment3 extends Fragment {
         });
 
 
-
+        makeTabels();
 
         return v;
     }
@@ -148,25 +152,21 @@ public class Fragment3 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        makeTabels();
     }
 
     private void makeTabels()
     {
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(
-                            JSONObject object,
-                            GraphResponse response) {
-
-                        final String id = object.optString("id");
-
-
+//        GraphRequest request = GraphRequest.newMeRequest(
+//                AccessToken.getCurrentAccessToken(),
+//                new GraphRequest.GraphJSONObjectCallback() {
+//                    @Override
+//                    public void onCompleted(
+//                            JSONObject object,
+//                            GraphResponse response) {
+//
 
                         ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
-                        query.whereEqualTo("id1", id);
+                        query.whereEqualTo("id1", userId);
                         query.findInBackground(new FindCallback<ParseObject>() {
                             public void done(List<ParseObject> matches, ParseException e) {
                                 if (e == null) {
@@ -190,7 +190,7 @@ public class Fragment3 extends Fragment {
                                     Log.d("Matches Fragment(3):", "Error: " + e.getMessage());
                                 }
                                 ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Matches");
-                                query2.whereEqualTo("id2", id);
+                                query2.whereEqualTo("id2", userId);
                                 query2.findInBackground(new FindCallback<ParseObject>() {
                                     public void done(List<ParseObject> matches2, ParseException e) {
                                         if (e == null) {
@@ -209,9 +209,11 @@ public class Fragment3 extends Fragment {
 
                                             }
 
-                                            navAdapterFacebook = new NavAdapterFacebook(getActivity().getApplicationContext(), R.layout.matches_view, ListFacebook);
-                                            navAdapterFacebook2 = new NavAdapterFacebook(getActivity().getApplicationContext(), R.layout.matches_view, ListFacebook2);
-                                            // listView.setAdapter(navAdapterFacebook);
+                                            if (getActivity()==null)
+                                                return;
+                                            navAdapterFacebook = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook);
+                                            navAdapterFacebook2 = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook2);
+
                                             gridView.setAdapter(navAdapterFacebook);
                                             gridView2.setAdapter(navAdapterFacebook2);
 
@@ -225,17 +227,16 @@ public class Fragment3 extends Fragment {
                                 });
                             }
                         });
-
-
-                    }
-                });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id");
-        request.setParameters(parameters);
-        request.executeAsync();
+//
+//
+//                    }
+//                });
+//        Bundle parameters = new Bundle();
+//        parameters.putString("fields", "id");
+//        request.setParameters(parameters);
+//        request.executeAsync();
 
 
     }
-
 
 }

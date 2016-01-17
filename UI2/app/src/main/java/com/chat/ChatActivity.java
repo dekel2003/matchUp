@@ -13,10 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.paint.Paint_chat;
@@ -112,7 +109,7 @@ public class ChatActivity extends ActionBarActivity {
 
 
             Gson gson = new Gson();
-            ChatMessage chatMessage = null;
+            ChatMessage chatMessage;
             if (json != null) {
                 chatMessage = gson.fromJson(json.toString(), ChatMessage.class);
                 chatMessage.setMe(false);
@@ -175,12 +172,7 @@ public class ChatActivity extends ActionBarActivity {
         adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());
         messagesContainer.setAdapter(adapter);
 
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
-
-
-        Log.d("Chat Activity: ", getIntent().getStringExtra("id"));
-        Log.d("Chat Activity: ", getIntent().getStringExtra("id1"));
-        Log.d("Chat Activity: ", getIntent().getStringExtra("id2"));
+//        RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
 //        final String id = getIntent().getStringExtra("id");
         final String id1 = getIntent().getStringExtra("id1");
@@ -307,7 +299,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
                 name[0] = user.getString("name");
                 match_name = name[0];
-                Log.d("Chat Activity: ", "Match name : " + name[0]);
             }
         });
 
@@ -353,7 +344,7 @@ public class ChatActivity extends ActionBarActivity {
 
     private void loadDummyHistory(){
 
-        chatHistory = new ArrayList<ChatMessage>();
+        chatHistory = new ArrayList<>();
 
         ChatMessage msg = new ChatMessage();
         msg.setId("1");
@@ -376,5 +367,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
 
     }
+
 
 }

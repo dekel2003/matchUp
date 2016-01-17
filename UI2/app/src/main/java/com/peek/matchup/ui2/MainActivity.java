@@ -2,6 +2,8 @@ package com.peek.matchup.ui2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
+import android.support.v4.app.ActivityManagerCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -44,6 +46,7 @@ import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -58,10 +61,11 @@ public class MainActivity extends ActionBarActivity {
 
     List<NavIteam> navIteamList;
     List<Fragment> fragmentList;
+    Serializable sfragmentList;
     Home home;
     Profile profile;
 
-    String name,id;
+    String name, id;
 
 
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -72,26 +76,35 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        Log.i("Main Activity", "create all again");
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.dopen, R.string.dclose)
-        {
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.dopen, R.string.dclose) {
             @Override
             public void onDrawerOpened(View drawerView) {
-            invalidateOptionsMenu();
-            super.onDrawerOpened(drawerView);
-        }
+                invalidateOptionsMenu();
+                super.onDrawerOpened(drawerView);
+            }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-            invalidateOptionsMenu();
-            super.onDrawerClosed(drawerView);
-        }
+                invalidateOptionsMenu();
+                super.onDrawerClosed(drawerView);
+            }
         };
+
+
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        loadUserDetails();
+        if (savedInstanceState==null)
+            loadUserDetails();
+        else{
+            id = savedInstanceState.getString("id");
+            name = savedInstanceState.getString("name");
+        }
 
+        loadActivityComponents(savedInstanceState);
 
 //        String birthday=getIntent().getStringExtra("birthday");
 
@@ -106,42 +119,73 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    private void loadActivityComponents(){
+    private void loadActivityComponents(Bundle savedInstanceState) {
 
-        TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tMgr = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         String mPhoneNumber = tMgr.getLine1Number();
 
         if (mPhoneNumber != null)
-            Log.d("dddddddddddddddddddd---",mPhoneNumber);//one time whene you register save phone name id
+            Log.d("Main Activity", mPhoneNumber);//one time when you register save phone name id
 
 
         drawerPane = (RelativeLayout) findViewById(R.id.drawer_pane);
         listView = (ListView) findViewById(R.id.nav_list);
 
-        navIteamList = new ArrayList<NavIteam>();
+        navIteamList = new ArrayList<>();
 
         navIteamList.add(new NavIteam("Home", "home", R.mipmap.home));
         navIteamList.add(new NavIteam("Profile", "my profile", R.mipmap.proicon));
         navIteamList.add(new NavIteam("Setting", "change setting", R.mipmap.setting));
         navIteamList.add(new NavIteam("Logout", "leave your acoount ", R.mipmap.logout));
 
-        NavAdapter navAdapter = new NavAdapter(getApplicationContext(), R.layout.item_nav_list, navIteamList);
+        NavAdapter navAdapter = new NavAdapter(this, R.layout.item_nav_list, navIteamList);
         listView.setAdapter(navAdapter);
-        home=new Home();
-        profile=new Profile();
+        fragmentList = new ArrayList<>();
+        if (name == null)
+            name = ParseUser.getCurrentUser().getString("name");
+        if (savedInstanceState!=null ) {
+            fragmentList.add(getSupportFragmentManager().getFragment(savedInstanceState, "f0"));
+//            fragmentList.add(getSupportFragmentManager().getFragment(savedInstanceState, "f1"));
+//            fragmentList.add(getSupportFragmentManager().getFragment(savedInstanceState, "f2"));
+//            fragmentList.add(getSupportFragmentManager().getFragment(savedInstanceState, "f3"));
+            profile = new Profile();
+            Bundle args = new Bundle();
+            args.putString("name", name);
 
-        fragmentList = new ArrayList<Fragment>();
-        fragmentList.add(home);
-        fragmentList.add(profile);
-        fragmentList.add(new Setting());
-        fragmentList.add(new Out());
+            if (fragmentList.get(0)==null){
+                home = new Home();
+                fragmentList.add(0,home);
+                fragmentList.get(0).setArguments(args);
+            }
 
-        Bundle args = new Bundle();
-        args.putString("name", name);
-        fragmentList.get(0).setArguments(args);
+            fragmentList.add(1,profile);
+            fragmentList.add(2,new Setting());
+            fragmentList.add(3,new Out());
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_content, fragmentList.get(0)).commit();
+            fragmentList.get(1).setArguments(args);
+            fragmentList.get(2).setArguments(args);
+            fragmentList.get(3).setArguments(args);
+
+        }else {
+
+            home = new Home();
+            profile = new Profile();
+            fragmentList.add(home);
+            fragmentList.add(profile);
+            fragmentList.add(new Setting());
+            fragmentList.add(new Out());
+
+            Bundle args = new Bundle();
+            args.putString("name", name);
+            for (Fragment f : fragmentList){
+                f.setArguments(args);
+            }
+
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.main_content, fragmentList.get(0)).commit();
+
+        }
 
         setTitle(navIteamList.get(0).getTitle());
         listView.setItemChecked(0, true);
@@ -151,9 +195,6 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                Bundle args = new Bundle();
-                args.putString("name", name);
-                fragmentList.get(position).setArguments(args);
                 fragmentManager.beginTransaction().replace(R.id.main_content, fragmentList.get(position)).commit();
 
                 setTitle(navIteamList.get(position).getTitle());
@@ -162,18 +203,17 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main,menu);
-        return  true;
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(actionBarDrawerToggle.onOptionsItemSelected(item))
+        if (actionBarDrawerToggle.onOptionsItemSelected(item))
             return true;
 
         return super.onOptionsItemSelected(item);
@@ -208,49 +248,57 @@ public class MainActivity extends ActionBarActivity {
         AppEventsLogger.deactivateApp(this);
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle savedInstanceState) {
-//        super.onSaveInstanceState(savedInstanceState);
-//        // Save UI state changes to the savedInstanceState.
-//        // This bundle will be passed to onCreate if the process is
-//        // killed and restarted.
-//        savedInstanceState.putInt("frag", curr_fragment);
-//        Log.i("Main Activity 3:", savedInstanceState.toString());
-//
-//        // etc.
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.i("Main Activity", "saving instance state");
+        super.onSaveInstanceState(savedInstanceState);
+        // Save UI state changes to the savedInstanceState.
+        // This bundle will be passed to onCreate if the process is
+        // killed and restarted.
+        savedInstanceState.putString("id", id);
+        savedInstanceState.putString("name", name);
 
-    private void loadUserDetails(){
-        final AccessToken accessToken=AccessToken.getCurrentAccessToken();
+        try {
+            getSupportFragmentManager().putFragment(savedInstanceState, "f0", fragmentList.get(0));
+        }catch (Exception ignored){
+
+        }
+//        savedInstanceState.putParcelable("fragmentList", );
+//        savedInstanceState.putSerializable("fragmentList", sfragmentList);
+
+        // etc.
+    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i("Main Activity", "Restore instance");
+    }
+
+    private void loadUserDetails() {
+        final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
-                if (response.getError()!=null){
+                if (response.getError() != null) {
                     Log.d("Main Activity: ", response.getError().getErrorMessage());
                     return;
                 }
-                Log.d("Main Activity: ", "connected with Token: " + accessToken.getToken());
-                name=object.optString("name");
-                id=object.optString("id");
+                name = object.optString("name");
+                id = object.optString("id");
 
                 ParseInstallation pi = ParseInstallation.getCurrentInstallation();
                 pi.put("FacebookID", id);
                 pi.saveInBackground();
 
                 ParseUser pu = ParseUser.getCurrentUser();
-                pu.put("FacebookID",id);
-                pu.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        getUserIdByFacebookId(id, MainActivity.this.getBaseContext());
-                    }
-                });
+                pu.put("FacebookID", id);
+                pu.saveInBackground();
 
-                loadActivityComponents();
-
-                ProfilePictureView profilePictureView=(ProfilePictureView) findViewById(R.id.profile_pic);
+                ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.profile_pic);
                 profilePictureView.setProfileId(id);
-                TextView nametxt=(TextView) findViewById(R.id.nametxt);
+                TextView nametxt = (TextView) findViewById(R.id.nametxt);
                 nametxt.setText(name);
             }
         });
@@ -260,22 +308,5 @@ public class MainActivity extends ActionBarActivity {
         request.executeAsync();
 
 
-
     }
-
-
-//    @Override
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        // Restore UI state from the savedInstanceState.
-//        // This bundle has also been passed to onCreate.
-//
-//
-//        if (savedInstanceState != null) {
-//            Log.i("Main Activity 2:", savedInstanceState.toString());
-//            curr_fragment = savedInstanceState.getInt("frag", 0);
-//        }
-//
-//
-//    }
 }
