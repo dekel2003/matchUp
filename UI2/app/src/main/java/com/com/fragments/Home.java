@@ -37,9 +37,11 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     View v;
     Fragment2 fragment2;
 
-    int curr_fragment = 1;
+    private static int curr_fragment = 2;
 
     private String user_name;
+
+    public Home(){}
 
     @Nullable
     @Override
@@ -48,14 +50,23 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         v = inflater.inflate(R.layout.tabs_view_pager_layout, container, false);
 
         user_name = getArguments().getString("name");
-        Log.i("Fragment Home:", "username is-" + user_name);
+
         i++;
+
         initVeiwPager();
         initTabHost(savedInstanceState);
 
-
-
+        if (savedInstanceState != null) {
+            curr_fragment = savedInstanceState.getInt("curr_frag");
+            tabHost.setCurrentTab(curr_fragment);
+        }
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        tabHost.setCurrentTab(curr_fragment);
     }
 
     private void initTabHost(Bundle savedInstanceState) {
@@ -75,9 +86,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
             tabSpec.setContent(new FakeContant(getActivity()));
             tabHost.addTab(tabSpec);
 
-            if (savedInstanceState != null) {
-                tabHost.setCurrentTab(curr_fragment);
-            }
+
 
 
         }
@@ -93,10 +102,11 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     }
 
     private void initVeiwPager() {
+
         viewPager = (ViewPager) v.findViewById(R.id.view_pager);
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         fragment2 = new Fragment2();
-        List<Fragment> listFragments = new ArrayList<Fragment>();
+        List<Fragment> listFragments = new ArrayList<>();
         listFragments.add(new Fragment3());
         listFragments.add(fragment2);
         listFragments.add(new Fragment1());
@@ -107,9 +117,6 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
             f.setArguments(args);
         }
 
-//        listFragments.add(new Fragment4());
-        //listFragments.add(new Fragment5());
-        //listFragments.add(new Fragment6());
         myFragmentPagerAdaper = new MyFragmentPagerAdaper(getChildFragmentManager(), listFragments);
         viewPager.setAdapter(myFragmentPagerAdaper);
         viewPager.setOnPageChangeListener(this);
@@ -121,6 +128,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
     public void onTabChanged(String tabId) {
         int SelectedItem = tabHost.getCurrentTab();
         curr_fragment = SelectedItem;
+        Log.i("Home","current tab is:" + curr_fragment + " instance is:" + i);
         viewPager.setCurrentItem(SelectedItem);
         HorizontalScrollView horizontalScrollView = (HorizontalScrollView) v.findViewById(R.id.h_scroll_view);
         View tabView = tabHost.getCurrentTabView();
@@ -151,4 +159,9 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         fragment2.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("curr_frag",curr_fragment);
+    }
 }

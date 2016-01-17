@@ -1,21 +1,15 @@
 package com.peek.matchup.ui2;
 
-import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.chat.ChatActivity;
-import com.parse.ParseAnalytics;
-import com.parse.ParseBroadcastReceiver;
 import com.parse.ParsePushBroadcastReceiver;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 public class Receiver extends ParsePushBroadcastReceiver {
 
@@ -25,13 +19,12 @@ public class Receiver extends ParsePushBroadcastReceiver {
     public void onPushReceive(Context context, Intent intent) {
 //        Toast.makeText(context, "Push received!!!!.", Toast.LENGTH_LONG).show();
 
-        super.onPushReceive(context, intent);
-
         try {
             JSONObject json = new JSONObject(intent.getExtras().getString("com.parse.Data"));
             Log.d("-Reciever", "raw JSONE object recieved: " + json.toString());
             Intent intentChatInformation = new Intent(json.getString("intention"));
             json = json.getJSONObject("value");
+            json.put("makeAlert", true);
             Log.d("-Reciever", "JSONE object: " + json.toString());
 
             intentChatInformation.putExtra("message", json.toString());
@@ -43,7 +36,6 @@ public class Receiver extends ParsePushBroadcastReceiver {
 
             context.sendBroadcast(intentChatInformation);
 
-
 //            if (ChatActivity.active)
 
         } catch (JSONException e) {
@@ -52,5 +44,14 @@ public class Receiver extends ParsePushBroadcastReceiver {
         }
         Log.i("-Reciever", "Push Received");
         Log.d("-Reciever", "received " + intent.getAction());
+
+//        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        getNotification(context, intent).flags |= Notification.FLAG_AUTO_CANCEL;
+//        getNotification(context, intent).contentIntent;
+        super.onPushReceive(context, intent);
+
     }
+
+
 }

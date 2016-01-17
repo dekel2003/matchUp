@@ -61,7 +61,7 @@ public class Fragment2 extends Fragment {
         final FragmentManager fragManager = myContext.getSupportFragmentManager();
 
         user_name = getArguments().getString("user_name");
-        Log.i("Fragment 2:", "username is-" + user_name);
+
 
         editText1 = (EditText) v.findViewById(R.id.editText1);
         editText2 = (EditText) v.findViewById(R.id.editText2);

@@ -86,7 +86,6 @@ public class LoginFacebook extends FragmentActivity {
     }
 
     private void proceedToMainActivity() {
-        Log.d("Main Activity: ", "000000000000");
         AccessToken token = AccessToken.getCurrentAccessToken();
 
         if (!token.getDeclinedPermissions().isEmpty()) {

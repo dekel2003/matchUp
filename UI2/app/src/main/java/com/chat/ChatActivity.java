@@ -13,10 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.paint.Paint_chat;
@@ -64,7 +61,7 @@ public class ChatActivity extends ActionBarActivity {
     private static SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.US);
     private final String id = ParseUser.getCurrentUser().getObjectId();
     private String match_name = "";
-
+    private String chatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +109,11 @@ public class ChatActivity extends ActionBarActivity {
 
 
             Gson gson = new Gson();
-            ChatMessage chatMessage = null;
+            ChatMessage chatMessage;
             if (json != null) {
                 chatMessage = gson.fromJson(json.toString(), ChatMessage.class);
+                if (!chatMessage.getchatId().equals(chatId))
+                    return;
                 chatMessage.setMe(false);
                 displayMessage(chatMessage);
             }else{
@@ -157,7 +156,7 @@ public class ChatActivity extends ActionBarActivity {
             SendJSONByParseId(match_id, request);
 
             Intent intent = new Intent(ChatActivity.this,Paint_chat.class);
-            intent.putExtra("chatId",getIntent().getStringExtra("chatId"));
+            intent.putExtra("chatId",chatId);
             intent.putExtra("id1",getIntent().getStringExtra("id1"));
             intent.putExtra("id2",getIntent().getStringExtra("id2"));
             intent.putExtra("senderId", ParseUser.getCurrentUser().getObjectId());
@@ -175,19 +174,17 @@ public class ChatActivity extends ActionBarActivity {
         adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());
         messagesContainer.setAdapter(adapter);
 
-        RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
-
-
-        Log.d("Chat Activity: ", getIntent().getStringExtra("id"));
-        Log.d("Chat Activity: ", getIntent().getStringExtra("id1"));
-        Log.d("Chat Activity: ", getIntent().getStringExtra("id2"));
+//        RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
 //        final String id = getIntent().getStringExtra("id");
         final String id1 = getIntent().getStringExtra("id1");
         final String id2 = getIntent().getStringExtra("id2");
 
         final String match_id = (id.equals(id1)) ? id2 : id1;
-        updateUserNameByParseID(match_id);
+        chatId = getIntent().getStringExtra("chatId");
+
+//        updateUserNameByParseID(match_id);
+
 //          SendNotifications.notifyByParseId(id);
 
 //        meLabel.setText(getUserNameByParseID(id));
@@ -210,7 +207,7 @@ public class ChatActivity extends ActionBarActivity {
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setId(id);
                 message.put("senderId", id);
-                String chatId = getIntent().getStringExtra("chatId");
+//                String chatId = getIntent().getStringExtra("chatId");
                 chatMessage.setchatId(chatId);
                 message.put("chatId", chatId);
                 chatMessage.setMessage(messageText);
@@ -228,10 +225,7 @@ public class ChatActivity extends ActionBarActivity {
                     request = new JSONObject();
                     request.putOpt("value", msgObj);
                     request.put("intention", "updateChat");
-                    if (!match_name.equals(""))
-                        request.put("alert", "You got a new message from " + match_name);
-                    else
-                        request.put("alert", "You got a new message");
+                    request.put("alert", "You got a new message from " + ParseUser.getCurrentUser().getString("name"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -307,7 +301,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
                 name[0] = user.getString("name");
                 match_name = name[0];
-                Log.d("Chat Activity: ", "Match name : " + name[0]);
             }
         });
 
@@ -322,7 +315,7 @@ public class ChatActivity extends ActionBarActivity {
 
     private void loadHistory(String id) {
 //        final String id = getIntent().getStringExtra("id");
-        String chatId = getIntent().getStringExtra("chatId");
+
         if (chatId.isEmpty()) {
             Log.d("Chat: ", "Error - chat ID is invalid");
         }
@@ -353,7 +346,7 @@ public class ChatActivity extends ActionBarActivity {
 
     private void loadDummyHistory(){
 
-        chatHistory = new ArrayList<ChatMessage>();
+        chatHistory = new ArrayList<>();
 
         ChatMessage msg = new ChatMessage();
         msg.setId("1");
@@ -376,5 +369,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
 
     }
+
 
 }
