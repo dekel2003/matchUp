@@ -100,6 +100,7 @@ public class MatchDetailes extends Fragment implements ViewPager.OnPageChangeLis
         bundle.putString("namemacher", namemacher);
         bundle.putString("idmacher", idmacher);
         bundle.putString("rec", rec);
+        bundle.putString("idmyMatch", idmyMatch);
         fragmentmacher.setArguments(bundle);
 
         Fragment fragmentmymatch=(new FragmentMatchProfile());

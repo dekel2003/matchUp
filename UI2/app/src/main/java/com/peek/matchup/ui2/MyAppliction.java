@@ -28,7 +28,7 @@ public class MyAppliction extends Application {
 
         JodaTimeAndroid.init(this);
 
-//        Parse.enableLocalDatastore(this);
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this, "ZrCnAe33kupfzOuJ7sncBXMOPYFXWJpDqIqWW2nb", "VLpNsGsoKEKvjQSWu0cdLn9NmAz889FfLZ6CfPFy");
         ParseInstallation.getCurrentInstallation().saveInBackground();
 

@@ -56,6 +56,8 @@ public class SerPath extends Path implements Serializable {
 
     public void addActions(Set<PathAction> src) {
         drawOnThisPath(src);
+        if (src==null)
+            return;
         actions.addAll(src);
     }
 
@@ -74,6 +76,8 @@ public class SerPath extends Path implements Serializable {
         }
     }
     public void drawOnThisPath(Set<PathAction> src){
+        if (src==null)
+            return;
         for(PathAction p : src){
             if(p.getType().equals(PathAction.PathActionType.MOVE_TO)){
                 super.moveTo(p.getX(), p.getY());

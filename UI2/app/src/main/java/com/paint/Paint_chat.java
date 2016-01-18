@@ -55,7 +55,6 @@ public class Paint_chat extends Activity {
         tv = new MyTouchEventView(this);
 
 
-
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat")
             .whereEqualTo("chatId", getIntent().getStringExtra("chatId"));
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -98,9 +97,13 @@ public class Paint_chat extends Activity {
         RelativeLayout.LayoutParams tv_params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         tv_params.addRule(RelativeLayout.ALIGN_BOTTOM, btnSave.getId());
+        tv_params.addRule(RelativeLayout.ALIGN_BOTTOM, btnReset.getId());
+
         tv_params.addRule(RelativeLayout.BELOW, btnSave.getId());
+        tv_params.addRule(RelativeLayout.BELOW, btnReset.getId());
         tv_params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        tv_params.setMargins(200, 200, 200, 200);
+
+//        tv_params.setMargins(0, 0, 0, 0);
 
         parentLinearLayout.setLayoutParams(tv_params); //causes layout update
 
@@ -108,6 +111,17 @@ public class Paint_chat extends Activity {
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                final ParseQuery<ParseObject> query = ParseQuery.getQuery("imageChat")
+                        .whereEqualTo("chatId", getIntent().getStringExtra("chatId"));
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        for (ParseObject o : objects){
+                            o.deleteInBackground();
+                        }
+                    }
+                });
 
                 Gson gson = new Gson();
                 JSONObject request = null;
@@ -129,6 +143,12 @@ public class Paint_chat extends Activity {
                     SendJSONByParseId(id1, request);
                 else
                     SendJSONByParseId(id2, request);
+
+
+//                String chatId = MyIntent.getStringExtra("chatId");
+//                ParseQuery queryReset = ParseQuery.getQuery("imageChat");
+//                queryReset.whereEqualTo("chatId",chatId);
+//                queryReset.
 
 
                 tv.path.reset();
@@ -212,11 +232,12 @@ public class Paint_chat extends Activity {
 
 
 
-
+        relativeLayout.addView(parentLinearLayout);
         relativeLayout.addView(btnReset);
         relativeLayout.addView(btnSave);
+        btnSave.setVisibility(View.INVISIBLE);
         parentLinearLayout.addView(tv);
-        relativeLayout.addView(parentLinearLayout);
+
 
 
         setContentView(relativeLayout);
@@ -292,27 +313,33 @@ public class Paint_chat extends Activity {
             query.getFirstInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject object, ParseException e) {
-                    ParseFile applicantResume = (ParseFile) object.get("applicantResumeFile");
-                    applicantResume.getDataInBackground(new GetDataCallback() {
-                        public void done(byte[] data, ParseException e) {
-                            if (e == null) {
-                                // data has the bytes for the resume
-                              //  tv.bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                              //  tv.path.reset();
+                    if (e == null) {
+                        ParseFile applicantResume = (ParseFile) object.get("applicantResumeFile");
+
+                        applicantResume.getDataInBackground(new GetDataCallback() {
+                            public void done(byte[] data, ParseException e) {
+                                if (e == null) {
+                                    // data has the bytes for the resume
+                                    //  tv.bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                                    //  tv.path.reset();
 
 
-                                //     tmpPath.addPath((SerPath) MyTouchEventView.deserialize(data));
-                           //     tv.path = tmpPath;
-                                tv.path.addActions((LinkedHashSet<SerPath.PathAction>) deserialize(data));
+                                    //     tmpPath.addPath((SerPath) MyTouchEventView.deserialize(data));
+                                    //     tv.path = tmpPath;
+                                    tv.path.addActions((LinkedHashSet<SerPath.PathAction>) deserialize(data));
 
-                                tv.invalidate();
+                                    tv.invalidate();
 
-                            } else {
-                                e.printStackTrace();
-                                // something went wrong
+                                } else {
+                                    e.printStackTrace();
+                                    // something went wrong
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                    e.printStackTrace();
+                    // something went wrong
+                }
                 }
             });
 

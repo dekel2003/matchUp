@@ -76,7 +76,7 @@ public class ChatAdapter extends BaseAdapter {
             holder.txtInfo.setText(chatMessage.getDate());
             holder.txtInfo.setVisibility(View.GONE);
         } else {
-            setSpecialTypeAlignment(holder, chatMessage);
+            setSpecialTypeAlignment(holder, chatMessage, context);
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -92,10 +92,10 @@ public class ChatAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void setSpecialTypeAlignment(ViewHolder holder, ChatMessage msg) {
+    private void setSpecialTypeAlignment(ViewHolder holder, ChatMessage msg, Activity context) {
         String specialType = msg.getSpecialType();
         if (specialType.equals("MatcherMsg")) {
-            holder.contentWithBG.setBackgroundResource(R.drawable.btn_yellowgreen_glossy);
+            holder.contentWithBG.setBackgroundResource(R.drawable.btn_red_matte);
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
             layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
@@ -107,16 +107,20 @@ public class ChatAdapter extends BaseAdapter {
 //            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
 //            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+//            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 
             holder.content.setLayoutParams(lp);
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-            layoutParams.gravity = Gravity.CENTER;
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
             holder.txtMessage.setLayoutParams(layoutParams);
             holder.txtMessage.setText(msg.getMessage());
+            holder.txtMessage.setTextColor(context.getResources().getColor(R.color.white));
 //            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
 //            layoutParams.gravity = Gravity.CENTER;
 //            holder.txtInfo.setLayoutParams(layoutParams);
+            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            holder.txtInfo.setLayoutParams(layoutParams);
         }
     }
 
@@ -133,7 +137,7 @@ public class ChatAdapter extends BaseAdapter {
             holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-            layoutParams.gravity = Gravity.RIGHT;
+            layoutParams.gravity = Gravity.END;
             holder.contentWithBG.setLayoutParams(layoutParams);
 
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
@@ -141,17 +145,17 @@ public class ChatAdapter extends BaseAdapter {
             lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             holder.content.setLayoutParams(lp);
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-            layoutParams.gravity = Gravity.RIGHT;
+            layoutParams.gravity = Gravity.END;
             holder.txtMessage.setLayoutParams(layoutParams);
 
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.RIGHT;
+            layoutParams.gravity = Gravity.END;
             holder.txtInfo.setLayoutParams(layoutParams);
         } else {
             holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-            layoutParams.gravity = Gravity.LEFT;
+            layoutParams.gravity = Gravity.START;
             holder.contentWithBG.setLayoutParams(layoutParams);
 
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
@@ -159,11 +163,11 @@ public class ChatAdapter extends BaseAdapter {
             lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             holder.content.setLayoutParams(lp);
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-            layoutParams.gravity = Gravity.LEFT;
+            layoutParams.gravity = Gravity.START;
             holder.txtMessage.setLayoutParams(layoutParams);
 
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.LEFT;
+            layoutParams.gravity = Gravity.START;
             holder.txtInfo.setLayoutParams(layoutParams);
         }
     }

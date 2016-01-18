@@ -1,7 +1,9 @@
 package com.inner.fragment;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,10 +15,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.chat.ChatActivity;
+import com.chat.ChatMessage;
 import com.com.adapters.NavAdapterFacebook;
 import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
+import com.google.gson.Gson;
 import com.models.NavItemFacebook;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -26,6 +28,7 @@ import com.parse.ParseUser;
 import com.peek.matchup.ui2.MatchDetailsActivity;
 import com.peek.matchup.ui2.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -44,19 +47,19 @@ public class Fragment3 extends Fragment {
     String userId = AccessToken.getCurrentAccessToken().getUserId();
 
 
-
     NavAdapterFacebook navAdapterFacebook;
     NavAdapterFacebook navAdapterFacebook2;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment3_layout, container, false);
-       // listView=(ListView) v.findViewById(R.id.listViewMatches);
+        // listView=(ListView) v.findViewById(R.id.listViewMatches);
 
         Chats = new ArrayList<>();
 
-        gridView=(GridView) v.findViewById(R.id.gridView);
+        gridView = (GridView) v.findViewById(R.id.gridView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,7 +76,7 @@ public class Fragment3 extends Fragment {
 
             }
         });
-        gridView2=(GridView) v.findViewById(R.id.gridView2);
+        gridView2 = (GridView) v.findViewById(R.id.gridView2);
 
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,13 +88,13 @@ public class Fragment3 extends Fragment {
 
                 String matcher = getUserIdByFacebookId(facebook_matcher, getContext());
 
-                String id1,id2;
-                if (facebook_id1.equals(id))
+                String id1, id2;
+                if (facebook_id1.equals(userId))
                     id1 = ParseUser.getCurrentUser().getObjectId();
                 else
                     id1 = getUserIdByFacebookId(facebook_id1, getContext());
 
-                if (facebook_id2.equals(id))
+                if (facebook_id2.equals(userId))
                     id2 = ParseUser.getCurrentUser().getObjectId();
                 else
                     id2 = getUserIdByFacebookId(facebook_id2, getContext());
@@ -107,9 +110,9 @@ public class Fragment3 extends Fragment {
                 }
 
                 String chatID;
-                if (!foundExistingChat.isEmpty()){
+                if (foundExistingChat != null && !foundExistingChat.isEmpty()) {
                     chatID = foundExistingChat.get(0).getObjectId();
-                }else {
+                } else {
                     ParseObject chat = new ParseObject("OpenChats");
                     chat.put("matcher", matcher);
                     chat.put("id1", id1);
@@ -149,94 +152,167 @@ public class Fragment3 extends Fragment {
         return v;
     }
 
+
+    private void makeTabels(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
+        query.whereEqualTo("id1", userId);
+        ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Matches");
+        query2.whereEqualTo("id2", userId);
+        List<ParseQuery<ParseObject>> queries = new ArrayList<>();
+        queries.add(query);
+        queries.add(query2);
+        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+        mainQuery.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> matches, ParseException e) {
+                if (e == null) {
+                    ListFacebook = new ArrayList<>();
+                    ListFacebook2 = new ArrayList<>();
+                    for (ParseObject match : matches) {
+                        if (match.getString("id1").equals(userId)) {
+                            if (match.getString("approve1").equals("1") && match.getString("approve2").equals("1")) {
+                                ListFacebook2.add(new NavItemFacebook(match.get("name2").toString(), match.get("id2").toString(), match.get("matcherName").toString(), match.get("matcher").toString(), match.get("rec2").toString(), match.getObjectId(), "1"));
+                                Chats.add(match);
+                            } else if (match.get("approve1").toString().compareTo("1") != 0) {
+                                ListFacebook.add(new NavItemFacebook(match.get("name2").toString(), match.get("id2").toString(), match.get("matcherName").toString(), match.get("matcher").toString(), match.get("rec2").toString(), match.getObjectId(), "1"));
+                            }
+                        } else {
+                            if (match.getString("approve1").equals("1") && match.getString("approve2").equals("1")) {
+                                ListFacebook2.add(new NavItemFacebook(match.getString("name1"), match.getString("id1"), match.getString("matcherName"), match.getString("matcher"), match.getString("rec1"), match.getObjectId(), "2"));
+                                Chats.add(match);
+                            } else if (match.get("approve2").toString().compareTo("1") != 0) {
+                                ListFacebook.add(new NavItemFacebook(match.getString("name1"), match.getString("id1"), match.getString("matcherName"), match.getString("matcher"), match.getString("rec1"), match.getObjectId(), "2"));
+                            }
+                        }
+                    }
+                } else {
+                    Log.d("Matches Fragment(3):", "Error: " + e.getMessage());
+                }
+                if (getActivity() == null)
+                    return;
+
+                navAdapterFacebook = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook);
+                navAdapterFacebook2 = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook2);
+
+                gridView.setAdapter(navAdapterFacebook);
+                gridView2.setAdapter(navAdapterFacebook2);
+            }
+        });
+    }
+
+
+    //register your activity onResume()
     @Override
     public void onResume() {
         super.onResume();
+        getContext().registerReceiver(mMessageReceiver, new IntentFilter("refreshFragment3"));
+        makeTabels();
     }
 
-    private void makeTabels()
-    {
-//        GraphRequest request = GraphRequest.newMeRequest(
-//                AccessToken.getCurrentAccessToken(),
-//                new GraphRequest.GraphJSONObjectCallback() {
-//                    @Override
-//                    public void onCompleted(
-//                            JSONObject object,
-//                            GraphResponse response) {
+    //Must unregister onPause()
+    @Override
+    public void onPause() {
+        super.onPause();
+        getContext().unregisterReceiver(mMessageReceiver);
+        Log.i("Dekel Chat Register:", "unregistered");
+    }
+
+
+    //This is the handler that will manager to process the broadcast intent
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            makeTabels();
+//            JSONObject json = null;
+//            try {
+//                json = new JSONObject(intent.getStringExtra("message"));
+////                Date date = format.parse(json.getString("dateTime"));
+////                json.put("dateTime",date);
+//                Log.i("Dekel Chat Recieve: ", json.toString());
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (NullPointerException e){
+//                Log.i("Dekel Chat Recieve: ", "null pointer exception..");
+//            }
 //
-
-                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
-                        query.whereEqualTo("id1", userId);
-                        query.findInBackground(new FindCallback<ParseObject>() {
-                            public void done(List<ParseObject> matches, ParseException e) {
-                                if (e == null) {
-
-
-                                    ListFacebook = new ArrayList<NavItemFacebook>();
-                                    ListFacebook2 = new ArrayList<NavItemFacebook>();
-                                    for (int i = 0; i < matches.size(); i++) {
-                                        if (matches.get(i).get("approve1").toString().compareTo("1") == 0 && matches.get(i).get("approve2").toString().compareTo("1") == 0){
-                                            ListFacebook2.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(), matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(), matches.get(i).get("rec2").toString(), matches.get(i).getObjectId().toString(), "1"));
-                                            Chats.add(matches.get(i));
-                                        }
-                                        else if(matches.get(i).get("approve1").toString().compareTo("1")!=0)
-                                        {
-                                            ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(),matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(),matches.get(i).get("rec2").toString(),matches.get(i).getObjectId().toString(),"1"));
-                                        }
-
-                                    }
-
-                                } else {
-                                    Log.d("Matches Fragment(3):", "Error: " + e.getMessage());
-                                }
-                                ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Matches");
-                                query2.whereEqualTo("id2", userId);
-                                query2.findInBackground(new FindCallback<ParseObject>() {
-                                    public void done(List<ParseObject> matches2, ParseException e) {
-                                        if (e == null) {
-
-                                            //allMatches.addAll(matches);
-                                            for (int i = 0; i < matches2.size(); i++) {
-                                                if(matches2.get(i).getString("approve1").compareTo("1")==0 && matches2.get(i).getString("approve2").compareTo("1")==0) {
-                                                    ListFacebook2.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(), "2"));
-                                                    Chats.add(matches2.get(i));
-                                                }
-                                                else  if(matches2.get(i).getString("approve2").compareTo("1")!=0)
-                                                {
-                                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(),"2"));
-
-                                                }
-
-                                            }
-
-                                            if (getActivity()==null)
-                                                return;
-                                            navAdapterFacebook = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook);
-                                            navAdapterFacebook2 = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook2);
-
-                                            gridView.setAdapter(navAdapterFacebook);
-                                            gridView2.setAdapter(navAdapterFacebook2);
-
-                                        } else {
-                                            Log.d("score", "Error: " + e.getMessage());
-
-                                            }
-
-                                        }
-
-                                });
-                            }
-                        });
 //
+//            Gson gson = new Gson();
+//            ChatMessage chatMessage;
+//            if (json != null) {
+//                chatMessage = gson.fromJson(json.toString(), ChatMessage.class);
+//                if (!chatMessage.getchatId().equals(chatId))
+//                    return;
+//                chatMessage.setMe(false);
+//                displayMessage(chatMessage);
+//            }else{
+//                Log.e("Dekel Chat", "json is null");
+//            }
+        }
+    };
+
+
+
+//    private void makeTabels_old() {
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
+//        query.whereEqualTo("id1", userId);
+//        query.findInBackground(new FindCallback<ParseObject>() {
+//            public void done(List<ParseObject> matches, ParseException e) {
+//                if (e == null) {
+//
+//
+//                    ListFacebook = new ArrayList<>();
+//                    ListFacebook2 = new ArrayList<>();
+//                    for (int i = 0; i < matches.size(); i++) {
+//                        if (matches.get(i).get("approve1").toString().compareTo("1") == 0 && matches.get(i).get("approve2").toString().compareTo("1") == 0) {
+//                            ListFacebook2.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(), matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(), matches.get(i).get("rec2").toString(), matches.get(i).getObjectId(), "1"));
+//                            Chats.add(matches.get(i));
+//                        } else if (matches.get(i).get("approve1").toString().compareTo("1") != 0) {
+//                            ListFacebook.add(new NavItemFacebook(matches.get(i).get("name2").toString(), matches.get(i).get("id2").toString(), matches.get(i).get("matcherName").toString(), matches.get(i).get("matcher").toString(), matches.get(i).get("rec2").toString(), matches.get(i).getObjectId(), "1"));
+//                        }
 //
 //                    }
+//
+//                } else {
+//                    Log.d("Matches Fragment(3):", "Error: " + e.getMessage());
+//                }
+//                ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Matches");
+//                query2.whereEqualTo("id2", userId);
+//                query2.findInBackground(new FindCallback<ParseObject>() {
+//                    public void done(List<ParseObject> matches2, ParseException e) {
+//                        if (e == null) {
+//
+//                            //allMatches.addAll(matches);
+//                            for (int i = 0; i < matches2.size(); i++) {
+//                                if (matches2.get(i).getString("approve1").compareTo("1") == 0 && matches2.get(i).getString("approve2").compareTo("1") == 0) {
+//                                    ListFacebook2.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(), "2"));
+//                                    Chats.add(matches2.get(i));
+//                                } else if (matches2.get(i).getString("approve2").compareTo("1") != 0) {
+//                                    ListFacebook.add(new NavItemFacebook(matches2.get(i).getString("name1"), matches2.get(i).getString("id1"), matches2.get(i).getString("matcherName"), matches2.get(i).getString("matcher"), matches2.get(i).getString("rec1"), matches2.get(i).getObjectId(), "2"));
+//
+//                                }
+//
+//                            }
+//
+//                            if (getActivity() == null)
+//                                return;
+//                            navAdapterFacebook = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook);
+//                            navAdapterFacebook2 = new NavAdapterFacebook(getActivity(), R.layout.matches_view, ListFacebook2);
+//
+//                            gridView.setAdapter(navAdapterFacebook);
+//                            gridView2.setAdapter(navAdapterFacebook2);
+//
+//                        } else {
+//                            Log.d("score", "Error: " + e.getMessage());
+//
+//                        }
+//
+//                    }
+//
 //                });
-//        Bundle parameters = new Bundle();
-//        parameters.putString("fields", "id");
-//        request.setParameters(parameters);
-//        request.executeAsync();
-
-
-    }
+//            }
+//        });
+//
+//    }
 
 }

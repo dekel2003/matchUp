@@ -47,7 +47,7 @@ public class Receiver extends ParsePushBroadcastReceiver {
 
 //        notification.flags |= Notification.FLAG_AUTO_CANCEL;
 
-        getNotification(context, intent).flags |= Notification.FLAG_AUTO_CANCEL;
+//        getNotification(context, intent).flags |= Notification.FLAG_AUTO_CANCEL;
 //        getNotification(context, intent).contentIntent;
         super.onPushReceive(context, intent);
 

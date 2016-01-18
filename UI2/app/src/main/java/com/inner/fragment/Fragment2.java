@@ -197,6 +197,7 @@ public class Fragment2 extends Fragment {
                 id2 = id;
                 name2=name;
             }else if (requestCode == DATEPICKER_FRAGMENT3)  {
+                SendNotifications.newMatch(id1, id2);
                 profilePictureView1.setProfileId(null);
                 profilePictureView2.setProfileId(null);
                 textView1.setText("");
@@ -206,7 +207,6 @@ public class Fragment2 extends Fragment {
                 name1=null;
                 name2=null;
                 btn.setVisibility(View.GONE);
-                SendNotifications.newMatch(id1, id2);
                 Toast.makeText(getActivity().getApplicationContext(),"Match has been proposed succesfully",Toast.LENGTH_LONG).show();
             }
             if (id1!=null && id2!=null)

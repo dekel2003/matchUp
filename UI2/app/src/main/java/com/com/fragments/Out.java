@@ -31,7 +31,6 @@ public class Out extends Fragment {
         super.onResume();
         LoginManager.getInstance().logOut();
         ParseUser.logOut();
-        getActivity().finish();
         Intent i=new Intent(getActivity(),LoginFacebook.class);
         startActivity(i);
         getActivity().finish();

@@ -89,6 +89,14 @@ public class ChatActivity extends ActionBarActivity {
         Log.i("Dekel Chat Register:", "unregistered");
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        adapter = new ChatAdapter(ChatActivity.this, new ArrayList<ChatMessage>());
+        messagesContainer.setAdapter(adapter);
+    }
+
+
     //This is the handler that will manager to process the broadcast intent
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -139,21 +147,21 @@ public class ChatActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (itemId == R.id.action_paint) {
 
-            Gson gson = new Gson();
-            JSONObject request = null;
-            try {
-//                JSONObject msgObj = new JSONObject(gson.toJson(chatMessage));
-                request = new JSONObject();
-                request.putOpt("value", "activate");
-                request.put("intention", "paint");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            final String id1 = getIntent().getStringExtra("id1");
-            final String id2 = getIntent().getStringExtra("id2");
-            final String match_id = (id.equals(id1)) ? id2 : id1;
-            SendJSONByParseId(match_id, request);
+//            Gson gson = new Gson();
+//            JSONObject request = null;
+//            try {
+////                JSONObject msgObj = new JSONObject(gson.toJson(chatMessage));
+//                request = new JSONObject();
+//                request.putOpt("value", "activate");
+//                request.put("intention", "paint");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            final String id1 = getIntent().getStringExtra("id1");
+//            final String id2 = getIntent().getStringExtra("id2");
+//            final String match_id = (id.equals(id1)) ? id2 : id1;
+//            SendJSONByParseId(match_id, request);
 
             Intent intent = new Intent(ChatActivity.this,Paint_chat.class);
             intent.putExtra("chatId",chatId);
@@ -285,9 +293,6 @@ public class ChatActivity extends ActionBarActivity {
     }
 
     private void updateUserNameByParseID(final String match_id){
-
-
-
         ParseQuery<ParseUser> query_user = ParseUser.getQuery();
         query_user.whereEqualTo("objectId", match_id);
         final String[] name = {null};
@@ -303,9 +308,6 @@ public class ChatActivity extends ActionBarActivity {
                 match_name = name[0];
             }
         });
-
-
-
     }
 
     private void scroll() {

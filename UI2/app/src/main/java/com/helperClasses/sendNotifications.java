@@ -21,13 +21,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.helperClasses.parseHelpers.getUserIdByFacebookId;
+
 /**
  * Created by Dekel on 12/23/2015.
  */
 public class SendNotifications {
     public static void newMatch(String Alice_id, String Bob_id){
         ParseQuery<ParseInstallation> parseInstallationParseQuery = ParseInstallation.getQuery();
-        parseInstallationParseQuery.whereEqualTo("FacebookID",Alice_id);
+        parseInstallationParseQuery.whereEqualTo("FacebookID", Alice_id);
 
         ParsePush push = new ParsePush();
         push.setMessage("You got a new Match");
@@ -40,6 +42,19 @@ public class SendNotifications {
         push.setMessage("You got a new Match");
         push.setQuery(parseInstallationParseQuery);
         push.sendInBackground();
+
+        JSONObject request = null;
+        try {
+            JSONObject msgObj = new JSONObject();
+            msgObj.put("clear", true);
+            request = new JSONObject();
+            request.putOpt("value", msgObj);
+            request.put("intention", "refreshFragment3");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        SendJSONByParseId(getUserIdByFacebookId(Alice_id, null), request);
+        SendJSONByParseId(getUserIdByFacebookId(Bob_id,null), request);
 
     }
 
