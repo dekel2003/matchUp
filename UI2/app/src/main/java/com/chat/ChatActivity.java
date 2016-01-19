@@ -253,7 +253,6 @@ public class ChatActivity extends ActionBarActivity {
 
     public void displayMessage(ChatMessage message) {
         adapter.add(message);
-        adapter.notifyDataSetChanged();
         scroll();
         if (adapter.getCount()%5==0){
             if (adapter.getCount()==5){
@@ -264,7 +263,6 @@ public class ChatActivity extends ActionBarActivity {
                 helpMessage.setSpecialType("MatcherMsg");
                 helpMessage.setMessage(help1);
                 adapter.add(helpMessage);
-                adapter.notifyDataSetChanged();
                 scroll();
             }
             if (adapter.getCount()==10){
@@ -275,7 +273,6 @@ public class ChatActivity extends ActionBarActivity {
                 helpMessage.setSpecialType("MatcherMsg");
                 helpMessage.setMessage(help1);
                 adapter.add(helpMessage);
-                adapter.notifyDataSetChanged();
                 scroll();
             }
             if (adapter.getCount()==15){
@@ -286,10 +283,10 @@ public class ChatActivity extends ActionBarActivity {
                 helpMessage.setSpecialType("MatcherMsg");
                 helpMessage.setMessage(help1);
                 adapter.add(helpMessage);
-                adapter.notifyDataSetChanged();
                 scroll();
             }
         }
+        adapter.notifyDataSetChanged();
     }
 
     private void updateUserNameByParseID(final String match_id){

@@ -160,7 +160,7 @@ public class MyTouchEventView extends View {
 
 
         //byte[] data = stream.toByteArray();
-
+        invalidate();
         byte[] data = serialize(path.actions);
         final ParseFile image_file = new ParseFile("myimg", data);
         image_file.saveInBackground(new SaveCallback() {
@@ -202,8 +202,6 @@ public class MyTouchEventView extends View {
                                     ee.printStackTrace();
                                 }
 
-                                Log.i("Paint:", request.toString());
-
                                 if (senderId.equals(id2))
                                     SendJSONByParseId(id1, request);
                                 else
@@ -212,7 +210,7 @@ public class MyTouchEventView extends View {
                         });
                     }
                 });
-                invalidate();
+
 //
 //                final ParseObject jobApplication = new ParseObject("imageChat");
 //

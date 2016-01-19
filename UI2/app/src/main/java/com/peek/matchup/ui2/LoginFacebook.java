@@ -10,9 +10,14 @@ import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.helperClasses.ParseErrorHandler;
+import com.parse.GetCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseSession;
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginActivity;
@@ -88,11 +93,20 @@ public class LoginFacebook extends FragmentActivity {
     private void proceedToMainActivity() {
         AccessToken token = AccessToken.getCurrentAccessToken();
 
+        ParseQuery<ParseObject> dummyQuery = ParseQuery.getQuery("Matches");
+        try {
+            dummyQuery.find();
+        } catch (ParseException e) {
+            gotoLoginScreen();
+            return;
+        }
+
+
         if (!token.getDeclinedPermissions().isEmpty()) {
             Log.d("Main Activity: ", "declined permission - log in again.");
             gotoLoginScreen();
         }
-        if(!ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
+        if(ParseUser.getCurrentUser()==null || !ParseFacebookUtils.isLinked(ParseUser.getCurrentUser())) {
             Log.d("Main Activity: ", "unlinked account - log out.");
             ParseUser.logOut();
             gotoLoginScreen();

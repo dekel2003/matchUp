@@ -98,7 +98,7 @@ public class ChatAdapter extends BaseAdapter {
             holder.contentWithBG.setBackgroundResource(R.drawable.btn_red_matte);
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            layoutParams.gravity = Gravity.CENTER;
 
 //            layoutParams.setLayoutDirection(RelativeLayout.CENTER_HORIZONTAL);
             holder.contentWithBG.setLayoutParams(layoutParams);
@@ -106,12 +106,12 @@ public class ChatAdapter extends BaseAdapter {
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
 //            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
 //            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 //            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 
             holder.content.setLayoutParams(lp);
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            layoutParams.gravity = Gravity.CENTER;
             holder.txtMessage.setLayoutParams(layoutParams);
             holder.txtMessage.setText(msg.getMessage());
             holder.txtMessage.setTextColor(context.getResources().getColor(R.color.white));
@@ -119,7 +119,7 @@ public class ChatAdapter extends BaseAdapter {
 //            layoutParams.gravity = Gravity.CENTER;
 //            holder.txtInfo.setLayoutParams(layoutParams);
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+            layoutParams.gravity = Gravity.CENTER;
             holder.txtInfo.setLayoutParams(layoutParams);
         }
     }
@@ -147,7 +147,7 @@ public class ChatAdapter extends BaseAdapter {
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
             layoutParams.gravity = Gravity.END;
             holder.txtMessage.setLayoutParams(layoutParams);
-
+            holder.txtMessage.setTextColor(context.getResources().getColor(R.color.black));
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.END;
             holder.txtInfo.setLayoutParams(layoutParams);
@@ -165,7 +165,7 @@ public class ChatAdapter extends BaseAdapter {
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
             layoutParams.gravity = Gravity.START;
             holder.txtMessage.setLayoutParams(layoutParams);
-
+            holder.txtMessage.setTextColor(context.getResources().getColor(R.color.black));
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
             layoutParams.gravity = Gravity.START;
             holder.txtInfo.setLayoutParams(layoutParams);

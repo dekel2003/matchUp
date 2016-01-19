@@ -152,11 +152,11 @@ public class Paint_chat extends Activity {
 
 
                 tv.path.reset();
-                try {
-                    tv.getDrawnMessage();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    tv.getDrawnMessage();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
                 tv.postInvalidate();
             }
         });

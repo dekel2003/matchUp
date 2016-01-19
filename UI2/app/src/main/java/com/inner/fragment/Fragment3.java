@@ -22,6 +22,7 @@ import com.chat.ChatMessage;
 import com.com.adapters.NavAdapterFacebook;
 import com.facebook.AccessToken;
 import com.google.gson.Gson;
+import com.helperClasses.ParseErrorHandler;
 import com.models.NavItemFacebook;
 import com.parse.FindCallback;
 import com.parse.ParseException;
