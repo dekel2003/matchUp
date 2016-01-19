@@ -11,9 +11,9 @@
                 android:id="@+id/image1"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
 
-                android:layout_alignTop="@+id/image2"
+                android:layout_marginTop="20dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 />
@@ -22,9 +22,10 @@
                 android:id="@+id/image2"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
+                android:layout_marginRight="15dp"
 
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
@@ -59,8 +60,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
        android:textSize="15dp"
+
         android:id="@+id/textView3"
-        android:layout_below="@+id/image2"
+        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/image2"
         android:layout_alignStart="@+id/image2" />
 
@@ -87,6 +89,15 @@
         android:layout_alignRight="@+id/image2"
         android:visibility="gone"
         android:layout_alignEnd="@+id/image2" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/imageButton"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/heartmatch"
+        android:visibility="invisible"/>
 
 
 </RelativeLayout>

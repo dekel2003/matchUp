@@ -8,24 +8,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.widget.ProfilePictureView;
 import com.helperClasses.SendNotifications;
-import com.parse.ParseObject;
 import com.peek.matchup.ui2.R;
-
-import org.json.JSONObject;
 
 
 public class Fragment2 extends Fragment {
@@ -47,7 +42,10 @@ public class Fragment2 extends Fragment {
     private String id2 = null;
     private String name1 = "";
     private String name2 = "";
-    private Button btn;
+    private ImageView btn;
+    Animation animRotate;
+    Animation animZout;
+
 
     private String user_name;
 
@@ -102,11 +100,12 @@ public class Fragment2 extends Fragment {
         textView2 = (TextView) v.findViewById(R.id.textView3);
 
 
-        btn = (Button) v.findViewById(R.id.btnMatchNow);
+        btn = (ImageView) v.findViewById(R.id.imageButton);
+        animRotate= AnimationUtils.loadAnimation(getActivity(),R.anim.shortrotate);
+        animZout= AnimationUtils.loadAnimation(getActivity(),R.anim.zoomoutandin);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
 //                GraphRequest request = GraphRequest.newMeRequest(
 //                        AccessToken.getCurrentAccessToken(),
@@ -184,18 +183,40 @@ public class Fragment2 extends Fragment {
             if (requestCode == DATEPICKER_FRAGMENT1) {
                 String name = data.getExtras().getString("name", "");
                 String id = data.getExtras().getString("id", "");
+                if(id2!=null && id2.equals(id))
+                {
+                    Toast.makeText(getActivity(),"You cant match person to himself",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
                 profilePictureView1.setProfileId(id);
+                profilePictureView1.startAnimation(animZout);
                 textView1.setText(name);
+                textView1.startAnimation(animZout);
                 id1 = id;
                 name1=name;
+                if(id2!=null)
+                    btn.startAnimation(animRotate);
+
             }
             else if (requestCode == DATEPICKER_FRAGMENT2)  {
                 String name = data.getExtras().getString("name", "");
                 String id = data.getExtras().getString("id", "");
+                if(id1!=null && id1.equals(id))
+                {
+                    Toast.makeText(getActivity(),"You cant match person to himself",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
                 profilePictureView2.setProfileId(id);
+                profilePictureView2.startAnimation(animZout);
                 textView2.setText(name);
+                textView2.startAnimation(animZout);
                 id2 = id;
                 name2=name;
+                if(id1!=null)
+                    btn.startAnimation(animRotate);
+
             }else if (requestCode == DATEPICKER_FRAGMENT3)  {
                 SendNotifications.newMatch(id1, id2);
                 profilePictureView1.setProfileId(null);

@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -55,24 +58,39 @@ public class Fragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment3_layout, container, false);
+        final Animation anim= AnimationUtils.loadAnimation(getActivity(), R.anim.zoomoutandin);
         // listView=(ListView) v.findViewById(R.id.listViewMatches);
 
         Chats = new ArrayList<>();
 
+
         gridView = (GridView) v.findViewById(R.id.gridView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), MatchDetailsActivity.class);
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                view.startAnimation(anim);
+               final Intent intent = new Intent(getActivity(), MatchDetailsActivity.class);
                 intent.putExtra("namemacher", ListFacebook.get(position).getMetcher());
                 intent.putExtra("idmacher", ListFacebook.get(position).getMetcherid());
                 intent.putExtra("idmyMatch", ListFacebook.get(position).getId());
                 intent.putExtra("rec", ListFacebook.get(position).getRec());
                 intent.putExtra("matchId", ListFacebook.get(position).getMatchID());
                 intent.putExtra("side", ListFacebook.get(position).getSide());
-                //match id and match side
-                startActivity(intent);
 
+                 Runnable task = new Runnable() {
+                    public void run() {
+                        // Execute your delayed code
+
+
+                        //match id and match side
+                        startActivity(intent);
+
+
+                    }
+                };
+                Handler handler = new Handler();
+                int millisDelay = 800;
+                handler.postDelayed(task, millisDelay);
 
             }
         });
@@ -81,6 +99,7 @@ public class Fragment3 extends Fragment {
         gridView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                view.startAnimation(anim);
 
                 String facebook_matcher = Chats.get(position).getString("matcher");
                 String facebook_id1 = Chats.get(position).getString("id1");
@@ -127,7 +146,7 @@ public class Fragment3 extends Fragment {
 
                     chatID = chat.getObjectId();
                 }
-                Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
+                final Intent intent = new Intent(getActivity().getApplicationContext(), ChatActivity.class);
                 Bundle args = new Bundle();
                 args.putString("id", matcher);
 
@@ -141,7 +160,14 @@ public class Fragment3 extends Fragment {
 
 
                 intent.putExtras(args);
-                startActivity(intent);
+                Runnable task = new Runnable() {
+                    public void run() {
+                        startActivity(intent);
+                    }};
+                Handler handler = new Handler();
+                int millisDelay = 800;
+                handler.postDelayed(task, millisDelay);
+
 
             }
         });
