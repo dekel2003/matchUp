@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"  tools:context=".MainActivity" android:id="@+id/drawerLayout">
+    android:layout_height="match_parent"  tools:context=".MainActivity" android:orientation="vertical" >
+
+
+<android.support.v4.widget.DrawerLayout  android:layout_width="match_parent"
+    android:layout_height="match_parent" android:id="@+id/drawerLayout"
+   >
 
 
 <RelativeLayout
@@ -98,3 +105,4 @@
         android:background="@drawable/nav_background"/>
 </RelativeLayout>
 </android.support.v4.widget.DrawerLayout >
+</LinearLayout>

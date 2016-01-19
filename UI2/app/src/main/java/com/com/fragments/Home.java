@@ -75,8 +75,8 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
 //        String[] tabNames = {"tab1", "tab2", "tab3", "tab4"};
 //        int[] icons = {R.mipmap.appicon, R.mipmap.connect, R.mipmap.mymatch, R.mipmap.chat};
 
-        String[] tabNames = {"tab1", "tab2", "tab3"};
-        int[] icons = {R.mipmap.relationship, R.mipmap.connect, R.mipmap.appicon};
+        String[] tabNames = {"tab1", "tab2"};
+        int[] icons = {R.mipmap.relationship, R.mipmap.connect};
 
         for (int i = 0; i < tabNames.length; i++) {
             TabHost.TabSpec tabSpec;
@@ -109,7 +109,7 @@ public class Home extends Fragment implements ViewPager.OnPageChangeListener,Tab
         List<Fragment> listFragments = new ArrayList<>();
         listFragments.add(new Fragment3());
         listFragments.add(fragment2);
-        listFragments.add(new Fragment1());
+     //  listFragments.add(new Fragment1());
 
         Bundle args = new Bundle();
         args.putString("user_name", user_name);

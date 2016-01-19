@@ -180,6 +180,7 @@ public class Fragment2 extends Fragment {
 //        if (resultCode ==getActivity().RESULT_OK )
         if (resultCode == Activity.RESULT_OK)
         {
+
             if (requestCode == DATEPICKER_FRAGMENT1) {
                 String name = data.getExtras().getString("name", "");
                 String id = data.getExtras().getString("id", "");

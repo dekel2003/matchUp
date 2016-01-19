@@ -23,6 +23,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.widget.ProfilePictureView;
 import com.inner.fragment.Fragment6;
 import com.models.RangeSeekBar;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -57,6 +58,7 @@ public class Profile extends Fragment {
     FragmentActivity myContext;
     Fragment f;
      FragmentManager fragManager;
+    static  int flag=0;
 
     public Profile() {
     }
@@ -115,8 +117,8 @@ public class Profile extends Fragment {
                 query.whereEqualTo("facebookId", myId);
                 query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
-                    public void done(List<ParseObject> nameList, ParseException e) {
-                        if (e == null && nameList!=null) {
+                    public void done(final List<ParseObject> nameList, ParseException e) {
+                        if (e == null && nameList != null) {
 
                             for (ParseObject Obj : nameList) {
                                 Obj.put("pic1", pic1);
@@ -127,12 +129,28 @@ public class Profile extends Fragment {
                                 Obj.put("aboutme", aboutme.getText().toString());
 
                                 Obj.saveInBackground();
+
                                 Toast.makeText(getActivity().getApplicationContext(), "Profile saved succesfully", Toast.LENGTH_LONG).show();
+
                             }
 
                         } else {
 
                         }
+
+
+                        ParseObject.unpinAllInBackground("profiles", nameList, new DeleteCallback() {
+                            public void done(ParseException e) {
+                                if (e != null) {
+                                    // There was some error.
+                                    return;
+                                }
+
+                                // Add the latest results for this query to the cache.
+                                ParseObject.pinAllInBackground("profiles", nameList);
+                            }
+                        });
+
                     }
                 });
 
@@ -161,7 +179,12 @@ public class Profile extends Fragment {
     {
        // ParseQuery<ParseObject> query =ParseQuery.getQuery("profiles");
         ParseQuery<ParseObject> query=new ParseQuery<ParseObject>("profiles");
-        query.whereEqualTo("facebookId", myId);
+        if(flag!=0)
+             query.whereEqualTo("facebookId", myId).fromLocalDatastore();
+        else {
+            query.whereEqualTo("facebookId", myId);
+            flag+=1;
+        }
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> nameList, ParseException e) {

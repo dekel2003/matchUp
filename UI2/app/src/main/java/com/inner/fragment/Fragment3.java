@@ -24,6 +24,7 @@ import com.facebook.AccessToken;
 import com.google.gson.Gson;
 import com.helperClasses.ParseErrorHandler;
 import com.models.NavItemFacebook;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -182,17 +183,22 @@ public class Fragment3 extends Fragment {
 
     private void makeTabels(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
-        query.whereEqualTo("id1", userId);
+        query.whereEqualTo("id1", userId).fromLocalDatastore();
+        //if(query.hasCachedResult());
+           // query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Matches");
-        query2.whereEqualTo("id2", userId);
+        query2.whereEqualTo("id2", userId).fromLocalDatastore();
+       // if(query2.hasCachedResult());
+         //   query2.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         List<ParseQuery<ParseObject>> queries = new ArrayList<>();
         queries.add(query);
         queries.add(query2);
-        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries);
+
+        ParseQuery<ParseObject> mainQuery = ParseQuery.or(queries).fromLocalDatastore();
 
         mainQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(List<ParseObject> matches, ParseException e) {
+            public void done(final List<ParseObject> matches, ParseException e) {
                 if (e == null) {
                     ListFacebook = new ArrayList<>();
                     ListFacebook2 = new ArrayList<>();
@@ -224,6 +230,18 @@ public class Fragment3 extends Fragment {
 
                 gridView.setAdapter(navAdapterFacebook);
                 gridView2.setAdapter(navAdapterFacebook2);
+
+                ParseObject.unpinAllInBackground("Matches", matches, new DeleteCallback() {
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            // There was some error.
+                            return;
+                        }
+
+                        // Add the latest results for this query to the cache.
+                        ParseObject.pinAllInBackground("Matches", matches);
+                    }
+                });
             }
         });
     }

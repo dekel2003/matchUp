@@ -8,8 +8,10 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.parse.Parse;
+import com.parse.ParseACL;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -27,8 +29,10 @@ public class MyAppliction extends Application {
         printHashkey();
 
         JodaTimeAndroid.init(this);
-
-        Parse.enableLocalDatastore(this);
+        Parse.enableLocalDatastore(getApplicationContext());
+        ParseUser.enableAutomaticUser();
+        ParseACL defaultACL = new ParseACL();
+        ParseACL.setDefaultACL(defaultACL, true);
         Parse.initialize(this, "ZrCnAe33kupfzOuJ7sncBXMOPYFXWJpDqIqWW2nb", "VLpNsGsoKEKvjQSWu0cdLn9NmAz889FfLZ6CfPFy");
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
