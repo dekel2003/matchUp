@@ -139,17 +139,7 @@ public class Profile extends Fragment {
                         }
 
 
-                        ParseObject.unpinAllInBackground("profiles", nameList, new DeleteCallback() {
-                            public void done(ParseException e) {
-                                if (e != null) {
-                                    // There was some error.
-                                    return;
-                                }
 
-                                // Add the latest results for this query to the cache.
-                                ParseObject.pinAllInBackground("profiles", nameList);
-                            }
-                        });
 
                     }
                 });
@@ -179,12 +169,10 @@ public class Profile extends Fragment {
     {
        // ParseQuery<ParseObject> query =ParseQuery.getQuery("profiles");
         ParseQuery<ParseObject> query=new ParseQuery<ParseObject>("profiles");
-        if(flag!=0)
-             query.whereEqualTo("facebookId", myId).fromLocalDatastore();
-        else {
-            query.whereEqualTo("facebookId", myId);
-            flag+=1;
-        }
+
+             query.whereEqualTo("facebookId", myId);
+
+
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> nameList, ParseException e) {

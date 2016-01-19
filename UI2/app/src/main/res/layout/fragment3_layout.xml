@@ -40,7 +40,7 @@
         <GridView
             android:id="@+id/gridView"
             android:layout_width="fill_parent"
-            android:layout_height="282dp"
+            android:layout_height="144dp"
             android:layout_below="@id/txt1"
             android:columnWidth="100dp"
             android:gravity="center"
@@ -87,7 +87,7 @@
 
             android:id="@+id/gridView2"
             android:layout_width="fill_parent"
-            android:layout_height="282dp"
+            android:layout_height="144dp"
             android:layout_below="@+id/txt2"
             android:columnWidth="100dp"
             android:gravity="center"
