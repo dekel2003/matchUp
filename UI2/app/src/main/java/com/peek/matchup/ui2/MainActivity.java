@@ -102,6 +102,10 @@ public class MainActivity extends ActionBarActivity {
         else{
             id = savedInstanceState.getString("id");
             name = savedInstanceState.getString("name");
+            ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.profile_pic);
+            profilePictureView.setProfileId(id);
+            TextView nametxt = (TextView) findViewById(R.id.nametxt);
+            nametxt.setText(name);
         }
 
         loadActivityComponents(savedInstanceState);
