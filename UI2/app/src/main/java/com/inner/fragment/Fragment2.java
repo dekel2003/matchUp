@@ -219,7 +219,15 @@ public class Fragment2 extends Fragment {
                     btn.startAnimation(animRotate);
 
             }else if (requestCode == DATEPICKER_FRAGMENT3)  {
-                SendNotifications.newMatch(id1, id2);
+                Boolean ok=data.getBooleanExtra("ok",true);
+                if(ok==true)
+                {
+                    Toast.makeText(getActivity().getApplicationContext(),"Match has been proposed succesfully",Toast.LENGTH_LONG).show();
+                    SendNotifications.newMatch(id1, id2);
+                }
+                else
+                    Toast.makeText(getActivity().getApplicationContext(),"Match failed-This couple already have open matched by you",Toast.LENGTH_LONG).show();
+
                 profilePictureView1.setProfileId(null);
                 profilePictureView2.setProfileId(null);
                 textView1.setText("");
@@ -229,7 +237,7 @@ public class Fragment2 extends Fragment {
                 name1=null;
                 name2=null;
                 btn.setVisibility(View.GONE);
-                Toast.makeText(getActivity().getApplicationContext(),"Match has been proposed succesfully",Toast.LENGTH_LONG).show();
+
             }
             if (id1!=null && id2!=null)
                 btn.setVisibility(View.VISIBLE);

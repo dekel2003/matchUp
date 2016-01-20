@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,10 @@ import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.models.NavItemFacebook;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.peek.matchup.ui2.R;
 
 import org.json.JSONArray;
@@ -88,36 +92,74 @@ public class ConfirmMatch extends DialogFragment {
         confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String id = AccessToken.getCurrentAccessToken().getUserId();
+                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Matches");
+
+                query.whereEqualTo("matcher", id);
+
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(final List<ParseObject> matches, ParseException e) {
+                        if (e == null) {
+                            int flag = 0;
+                            for (ParseObject match : matches) {
+                                if (((match.getString("id1").equals(args.getString("id1"))) &&
+                                        (match.getString("id2").equals(args.getString("id2")))) || ((match.getString("id2").equals(args.getString("id1"))) &&
+                                        (match.getString("id1").equals(args.getString("id2"))))) {
+                                    flag = 1;
+                                    break;
 
 
+                                }
+                            }
+                            if (flag == 1) {
+                                Intent i = new Intent();
+                                i.putExtra("ok", false);
+                                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
+                                dismiss();
+                            }
+                            else {
+                                ParseObject addMatch = new ParseObject("Matches");
+                                addMatch.put("id1", args.getString("id1"));
+                                addMatch.put("id2", args.getString("id2"));
 
-                ParseObject addMatch = new ParseObject("Matches");
-                addMatch.put("id1", args.getString("id1"));
-                addMatch.put("id2", args.getString("id2"));
+                                addMatch.put("name1", args.getString("name1"));
+                                addMatch.put("name2", args.getString("name2"));
 
-                addMatch.put("name1", args.getString("name1"));
-                addMatch.put("name2", args.getString("name2"));
+                                addMatch.put("rec1", rec1.getText().toString());
+                                addMatch.put("rec2", rec2.getText().toString());
 
-                addMatch.put("rec1", rec1.getText().toString());
-                addMatch.put("rec2", rec2.getText().toString());
+                                addMatch.put("help1", help1.getText().toString());
+                                addMatch.put("help2", help2.getText().toString());
+                                addMatch.put("help3", help3.getText().toString());
 
-                addMatch.put("help1", help1.getText().toString());
-                addMatch.put("help2", help2.getText().toString());
-                addMatch.put("help3", help3.getText().toString());
 
-                String id = AccessToken.getCurrentAccessToken().getUserId();
-                addMatch.put("matcher", id);
-                addMatch.put("matcherName", args.getString("user_name"));
-                addMatch.put("approve1", "0");
-                addMatch.put("approve2", "0");
+                                addMatch.put("matcher", id);
+                                addMatch.put("matcherName", args.getString("user_name"));
+                                addMatch.put("approve1", "0");
+                                addMatch.put("approve2", "0");
 
-                addMatch.saveInBackground();
+                                addMatch.saveInBackground();
 
-                Intent i = new Intent();
+                                Intent i = new Intent();
+                                i.putExtra("ok", true);
+                                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
+                                dismiss();
+                            }
+
+
+                        } else {
+                            Log.d("Matches Fragment(3):", "Error: " + e.getMessage());
+                        }
+
+
+                    }
+                });
+
+
 //                        .putExtra("name", ListFacebook.get(position).getTitle())
 //                        .putExtra("id", ListFacebook.get(position).getId());
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, i);
-                dismiss();
+
             }
         });
 
