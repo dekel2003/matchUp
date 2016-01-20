@@ -293,7 +293,7 @@ public class MainActivity extends ActionBarActivity {
                 pi.saveInBackground();
 
                 ParseUser pu = ParseUser.getCurrentUser();
-                pu.put("FacebookID", id);
+                pu.put("facebookID", id);
                 pu.saveInBackground();
 
                 ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.profile_pic);

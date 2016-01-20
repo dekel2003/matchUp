@@ -11,14 +11,12 @@ import java.util.List;
 
 import static com.helperClasses.ParseErrorHandler.handleParseError;
 
-/**
- * Created by Dekel on 1/10/2016.
- */
+
 public class parseHelpers {
 
     public static String getUserIdByFacebookId(String facebookId, Context context){
         ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("facebookId", facebookId);
+        query.whereEqualTo("facebookID", facebookId);
 
         List<ParseUser> results = null;
         try {
@@ -27,7 +25,6 @@ public class parseHelpers {
             handleParseError(context, e);
             e.printStackTrace();
         }
-        assert results != null;
         return results.get(0).getObjectId();
     }
 
