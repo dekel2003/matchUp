@@ -1,6 +1,7 @@
 package com.com.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.TabHost;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
 import com.com.adapters.MyFragmentPagerAdaper;
 import com.inner.fragment.Fragment1;
@@ -67,6 +70,7 @@ public class MatchDetailes extends Fragment implements ViewPager.OnPageChangeLis
     private void initTabHost(Bundle savedInstanceState) {
         tabHost=(TabHost)v.findViewById(R.id.tabhost);
         tabHost.setup();
+
         String [] tabNames={"your match","the matcher"};
       //  int [] icons={R.mipmap.appicon,R.mipmap.connect};
         for(int i=0;i<tabNames.length;i++)
@@ -77,6 +81,9 @@ public class MatchDetailes extends Fragment implements ViewPager.OnPageChangeLis
             tabSpec.setIndicator(tabNames[i]);
             tabSpec.setContent(new FakeContant(getActivity()));
             tabHost.addTab(tabSpec);
+            //TextView x = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+           // x.setTextSize(20);
+
 
 
         }
