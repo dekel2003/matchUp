@@ -182,6 +182,7 @@ public class Fragment3 extends Fragment {
 
 
     private void makeTabels(){
+        Chats.clear();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Matches");
         query.whereEqualTo("id1", userId);
         //if(query.hasCachedResult());
